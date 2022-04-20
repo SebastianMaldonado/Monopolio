@@ -6,16 +6,23 @@
 
 
 class Humano {
+  Lista_interfaz cola_acciones;//Lista de todas las decisiones pendientes por tomar
+  
+  
+  
+  
   
   /*
   -----------------------------------|Función para acordar una compra|-----------------------------------
   Si al jugador se le es propuesto comprar una propiedad se ejecutará esta función
-    Por medio de la interfaz esta función retornará la decision del jugador
-  La variable jugador contiene la información del jugador del que procede la oferta
-    Mientras que la variable propiedad contiene la propiedad que se propone vender y la variable precio, al precio propuesto
+  Por medio de la interfaz esta función retornará la decision del jugador
   */
-  boolean comprar (Casilla propiedad, int precio) {
-    return false;
+  void comprar (Casilla propiedad, int precio) {
+    menu = 8;  //Visualizar ventanas en cola
+    
+    //Crear interfaz y añadirla a la cola
+    Ventana compra = new Ventana ();
+    cola_acciones.Añadir_cola(compra);
   }
   
   
@@ -26,8 +33,12 @@ class Humano {
   La variable jugador contiene la información del jugador del que procede la oferta
     mientras que la variable propiedad contiene la propiedad que se propone vender y la variable precio, al precio propuesto
   */
-  boolean vender_propiedad (Jugador jugador, Casilla propiedad, int precio) {
-    return false;
+  void vender_propiedad (Jugador jugador, Casilla propiedad, int precio) {
+    menu = 8;  //Visualizar ventanas en cola
+    
+    //Crear interfaz y añadirla a la cola
+    Ventana venta = new Ventana ();
+    cola_acciones.Añadir_cola(venta);
   }
   
   
