@@ -9,7 +9,11 @@
   Descripción de versión:
   - Ofertar y vender funcionales parcialmente 
   - Introducida arquitectura para Interfaz
-  - Habilitada interfaz para introducir jugadores y cargar el juego
+  - Añadido nuevo sistema de toma de decisiones para jugador humano
+  - Añadida cola de decisiones para el jugador humano
+  - Introducida versión experimental de ventanas interactivas
+  - Ahora cada jugador contará con su propio contenedor (objeto de la clase Humano o de la clase Maquina)
+  
 */
 
 /*
@@ -20,9 +24,8 @@
 
 Juego partida = new Juego();  //Generar una partida nueva
 Lista_Jugadores jugadores = new Lista_Jugadores(); //Generar lista de jugadores
-Humano interfaz = new Humano();  //Generar una partida nueva
-Maquina IA = new Maquina();  //Generar una partida nueva
 
+boolean mouseDragged;  //Variable booleana para cuando se mantenga presionado el ratón
 int menu;  //Variable de definición del Menú (Revisar Documentación para más información)
 
 
@@ -50,17 +53,36 @@ void draw(){
     case 0:  //Página de Inicio
       break;
     case 1:  //Página de Opciones
+      break;   
+    case 2:  //Página de Lectura de Jugadores
       break;
-    case 2:  //Página de 
-    case 5:
+    case 3:  //Página de Selección de Modalidad
       break;
-    case 10:
+    case 4:  //Pantalla de Carga
+      break;
+    case 5:  //Página del Juego
+      break;
+    case 6:  //Inventario
+      break;
+    case 7:  //Cartera
+      break;
+    case 8:  //Visualizar ventanas
+      break;
+    case 9:
+      break;
+    case 10: //Pantalla del Fin del Juego 
       break;
     case 15:
       break;
-  
   }
+}
 
 
+//----------------------------|Lectura del ratón|----------------------------
+void mouseDragged() {
+  mouseDragged = true;
+}
 
+void mouseReleased() {
+  mouseDragged = false;
 }
