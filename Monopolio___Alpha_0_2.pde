@@ -1,18 +1,16 @@
 /*
 |----------------------------//----------------------------|
-|  Monopolio - Versión Alpha 0.2 (17/04/22)                |
+|  Monopolio - Versión Alpha 0.3 (20/04/22)                |
 |  Proyecto Estructura de Datos I                          |
 |                                                          |
 |  Desarrollador: Marudonado-kami-sama Studios             |
 |----------------------------//----------------------------|
 
   Descripción de versión:
-  - Ofertar y vender funcionales parcialmente 
-  - Introducida arquitectura para Interfaz
-  - Añadido nuevo sistema de toma de decisiones para jugador humano
-  - Añadida cola de decisiones para el jugador humano
-  - Introducida versión experimental de ventanas interactivas
-  - Ahora cada jugador contará con su propio contenedor (objeto de la clase Humano o de la clase Maquina)
+  - Ofertar y vender funcionales
+  - Sistema de Ventanas interactivas operativo
+  - Implementado Ciclo Básico del Juego
+  - Implementadas Condiciones de Finalización
   
 */
 
