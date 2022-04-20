@@ -8,10 +8,6 @@
 class Humano {
   Lista_interfaz cola_acciones;//Lista de todas las decisiones pendientes por tomar
   
-  
-  
-  
-  
   /*
   -----------------------------------|Función para acordar una compra|-----------------------------------
   Si al jugador se le es propuesto comprar una propiedad se ejecutará esta función
