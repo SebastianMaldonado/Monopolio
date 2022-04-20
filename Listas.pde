@@ -52,7 +52,6 @@ class Casilla {
       } else {
         this.propietario = propietario;
       }
-      
     }
     
     //Función para cálculo de la renta
@@ -103,7 +102,6 @@ class Casilla {
 
 class Lista_Jugadores {
   Jugador jugador;            //Jugador en la Posición
-  int negociar = 10;           //Turnos hasta la próxima oportunidad de ofertar o vender (Máquina)
   Lista_Jugadores siguiente;  //Siguiente jugador en el turno
   
   void generar_lista (Jugador jugador){
@@ -121,5 +119,38 @@ class Lista_Jugadores {
     nuevo.jugador = jugador;
     nuevo.siguiente = this;
     lista.siguiente = nuevo;
+  }
+}
+
+
+//
+//
+
+class Lista_interfaz {
+  Ventana interfaz;
+  Lista_interfaz siguiente;
+  
+  //Ingresar ventana a la posición en la lista
+  void Ingresar_ventana (Ventana ventana){
+    this.interfaz = ventana;
+  }
+  
+  //Añadir nueva ventana a la cola
+  void Añadir_cola (Ventana ventana){
+      Lista_interfaz lista = this;
+      
+      if (this.interfaz == null){  //Si la cola está limpia
+        this.Ingresar_ventana (ventana);
+      } else {                     //Si la cola NO está limpia
+        Lista_interfaz nuevo = new Lista_interfaz ();
+        nuevo.Ingresar_ventana (ventana);
+        
+        while (lista.siguiente != this){
+          lista = lista.siguiente;
+        }
+        
+        lista.siguiente = nuevo;
+        nuevo.siguiente = this;
+      }
   }
 }
