@@ -17,7 +17,7 @@ class Humano {
     menu = 8;  //Visualizar ventanas en cola
     
     //Crear interfaz y añadirla a la cola
-    Ventana compra = new Ventana ();
+    Ventana compra = new Ventana (10, 10, 10, 10);
     cola_acciones.Añadir_cola(compra);
   }
   
