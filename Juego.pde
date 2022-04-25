@@ -13,6 +13,18 @@ class Juego {
   int cant_jug;    //Contar la cantidad de jugadores para cada partida (2-8 jugadores)
   int[] of_pausa;  //Lista de la cola de espera para poder ofertar y vender (cada posición del vector es el número del jugador)
   
+  void lanzar_dados () {
+    if (!dados_lanzados) {
+      dado1 = int(random (1, 6));
+      dado2 = int(random (1, 6));
+      dados_lanzados = true;
+    }
+  }
+  
+  void pasar_turno () {
+    jugadores = jugadores.siguiente;
+    ind = 0;
+  }
   
   /*
   -----------------------------------|Procedimiento de Generación de Jugadores|-----------------------------------
