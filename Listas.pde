@@ -94,6 +94,25 @@ class Casilla {
         return this;
       }
     }
+    
+     Casilla mover_posicion (int cant, boolean dir){
+       Casilla posicion = this;
+       
+       if (dir){  //Mover hacia adelante
+         for (int i = 1; i <= cant; i++){
+           posicion = posicion.siguiente;
+         }
+       } else {  //Mover hacia atrás
+         Casilla Cola = this;
+         
+         for (int i = 1; i <= cant; i++){
+           while (posicion.siguiente != Cola){
+             posicion = posicion.siguiente;
+           }
+         }
+       }
+       return posicion;
+     }
 }
 
 
@@ -152,5 +171,8 @@ class Lista_interfaz {
         lista.siguiente = nuevo;
         nuevo.siguiente = this;
       }
+  }
+  
+  void mostrar_ventanas () { 
   }
 }
