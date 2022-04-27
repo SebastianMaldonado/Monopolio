@@ -8,6 +8,11 @@
 class Humano {
   Lista_interfaz cola_acciones;//Lista de todas las decisiones pendientes por tomar
   
+  Humano (){
+    this.cola_acciones = new Lista_interfaz();
+  }
+  
+  
   /*
   -----------------------------------|Función para acordar una compra|-----------------------------------
   Si al jugador se le es propuesto comprar una propiedad se ejecutará esta función
@@ -17,8 +22,8 @@ class Humano {
     menu = 8;  //Visualizar ventanas en cola
     
     //Crear interfaz y añadirla a la cola
-    Ventana compra = new Ventana (10, 10, 10, 10);
-    cola_acciones.Añadir_cola(compra);
+    Ventana compra = new Ventana (100, 100, 300, 600);
+    cola_acciones.añadir_cola(compra, 0);
   }
   
   
@@ -33,8 +38,8 @@ class Humano {
     menu = 8;  //Visualizar ventanas en cola
     
     //Crear interfaz y añadirla a la cola
-    Ventana venta = new Ventana ();
-    cola_acciones.Añadir_cola(venta);
+    Ventana venta = new Ventana (100, 100, 300, 600);
+    cola_acciones.añadir_cola(venta, 0);
   }
   
   
