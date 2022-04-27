@@ -6,17 +6,15 @@
 
 
 class Ventana {
-  float x;
-  float y;
-  float tx;
-  float ty;
-  int cont = 0;
-  boolean sobre_caja = false;
-  boolean mov = false;
-  float xOffset =  0.0;
-  float yOffset =  0.0;
-  boolean mouse_tm = false;
-  boolean mouse_lb = false;
+  float x;                      //Posición en x
+  float y;                      //Posición en y
+  float tx;                     //Tamaño en x
+  float ty;                     //Tamaño en y
+  float x_margen =  0.0;        //Margen en x
+  float y_margen =  0.0;        //Margen en y
+  boolean sobre_caja = false;   //Booleano para saber si el ratón está sobre la caja
+  boolean mov = false;          //Booleano para saber si se está moviendo
+  boolean mouse_tm = false;     //Booleano para seleccionar la caja con un solo click
 
   Ventana (float x, float y, float tx, float ty){
     this.x = x;
@@ -25,55 +23,59 @@ class Ventana {
     this.ty = ty;
   }
   
-  void dibujar (boolean pres) {   
-    //Si el cursor está por encima de la ventana
+  
+  //-------------------------|Sobre Caja|-------------------------
+  boolean sobre_caja (){
     if ((mouseX > this.x) && (mouseX < this.x + this.tx) && (mouseY > this.y) && (mouseY < this.y + this.ty)) {
-      this.sobre_caja = true;  
-      
+      return true;    //Si el cursor está por encima de la ventana
+    } else {
+      return false;   //Si el cursor NO está por encima de la ventana
+    }
+  }
+  
+  
+  //-------------------------|Mover Ventana|-------------------------
+  void presionar () {
+    
+    this.sobre_caja = this.sobre_caja();   //Booleano para saber si el ratón está sobre la ventana
+    
+    //Si el cursor está por encima de la ventana
+    if (this.sobre_caja){
       if(!this.mov) {  //Si la caja no se está moviendo
-        stroke(255); 
-        fill(153);
-        //println("activo");
-      } else {
-        //println("detenido");
       }
     } else {  //Si el cursor NO está por encima de la ventana
-      stroke(153);
-      fill(153);
-      this.sobre_caja = false;
     }
     
-    //Visualización de la pestaña
-    rect (this.x, this.y, this.tx, this.ty);
-    
-    //Presionar caja
-    if ((mousePressed) && (!this.mouse_tm)){
-      if(this.sobre_caja) {
-        pres = true;
+    if ((mousePressed) && (!this.mouse_tm)){    //Presionar caja
+      if(this.sobre_caja) {  //Activar movimiento
         this.mov = true; 
-        fill(255, 255, 255);
       } else {
         this.mov = false;
-      }
+      }   
       
-        this.xOffset = mouseX - this.x; 
-        this.yOffset = mouseY - this.y; 
-        mouse_tm = true;     
+      //Generar márgenes
+      this.x_margen = mouseX - this.x;
+      this.y_margen = mouseY - this.y; 
+        
+      this.mouse_tm = true;     
     }
 
-    if (!mousePressed){
-      mouse_tm = false;
+    if (!mousePressed) {
+      this.mouse_tm = false;
     }
 
-    
-    //Mantenerla presionada
-    if (mouseDragged){
+    if (mouseDragged) {                         //Mantenerla presionada
       if(this.mov) {
-        println("moviendo");
-        this.x = mouseX - this.xOffset; 
-        this.y = mouseY - this.yOffset; 
-        println(this.x +"  =  "+mouseX +"  -  "+ this.xOffset);
+        this.x = mouseX - this.x_margen; 
+        this.y = mouseY - this.y_margen; 
       }
     }
+  }
+  
+  
+  //-------------------------|Mostrar Ventana|-------------------------
+  void mostrar (){
+    //Visualización de la pestaña
+    rect (this.x, this.y, this.tx, this.ty);
   }
 }
