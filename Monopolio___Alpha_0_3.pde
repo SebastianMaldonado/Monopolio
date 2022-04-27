@@ -125,6 +125,10 @@ void draw(){
 
 
 //----------------------------|Lectura del ratón|----------------------------
+void mousePressed(){
+  jugadores.jugador.interfaz.cola_acciones = jugadores.jugador.interfaz.cola_acciones.seleccionar();
+}
+
 void mouseDragged() {
   mouseDragged = true;
 }
