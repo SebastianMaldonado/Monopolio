@@ -142,37 +142,119 @@ class Lista_Jugadores {
 }
 
 
-//
-//
+//-------------------------|Lista de Ventanas|-------------------------
+//Lista doblemente enlazada circular donde se almacena la cola de las ventanas con las que el jugador podrá acceder a opciones
 
 class Lista_interfaz {
-  Ventana interfaz;
-  Lista_interfaz siguiente;
+  Ventana interfaz;          //Ventana almacenada
+  int cont;                  //Contador de la ventana
   
-  //Ingresar ventana a la posición en la lista
-  void Ingresar_ventana (Ventana ventana){
-    this.interfaz = ventana;
+  Lista_interfaz siguiente;  //Ventana siguiente en cola
+  Lista_interfaz previo;     //Ventana anterior en cola
+  
+  Lista_interfaz (){
+    this.interfaz = null;
+    this.cont = 0;
+    this.siguiente = null;
+    this.previo = null;
   }
   
+  
+  //-------------------------|Ingresar Ventana|-------------------------
+  //Ingresar ventana a la posición en la lista
+  void Ingresar_ventana (Ventana ventana, int cont) {
+    this.interfaz = ventana;
+    this.cont = cont;
+    this.siguiente = this;
+    this.previo = this;
+  }
+  
+  
+  //-------------------------|Añadir a la Cola|-------------------------
   //Añadir nueva ventana a la cola
-  void Añadir_cola (Ventana ventana){
+  Lista_interfaz añadir_cola (Ventana ventana, int cont) {
       Lista_interfaz lista = this;
       
       if (this.interfaz == null){  //Si la cola está limpia
-        this.Ingresar_ventana (ventana);
+        ventana.x = ventana.x + (50 * cont);
+        this.Ingresar_ventana (ventana, cont);
+        
+        return this;
       } else {                     //Si la cola NO está limpia
         Lista_interfaz nuevo = new Lista_interfaz ();
-        nuevo.Ingresar_ventana (ventana);
+        nuevo.Ingresar_ventana (ventana, cont);
         
-        while (lista.siguiente != this){
-          lista = lista.siguiente;
-        }
+        lista = this.previo;
+        
+        nuevo.siguiente = this;  //Ingresar Siguiente
+        nuevo.previo = this.previo; //Ingresar Anterior
+        
+        nuevo.interfaz.x = nuevo.interfaz.x + (50 * nuevo.cont);
         
         lista.siguiente = nuevo;
-        nuevo.siguiente = this;
+        this.previo = nuevo;
+        
+        return nuevo;
       }
   }
   
-  void mostrar_ventanas () { 
+  
+  //-------------------------|Mostrar Ventanas|-------------------------
+  void mostrar_interfaces () {
+    Lista_interfaz temp = this;
+    temp.interfaz.mostrar();
+    
+    while (temp.siguiente != this) {
+      temp = temp.siguiente;
+      temp.interfaz.mostrar();
+    }
+    
+    this.previo.interfaz.presionar();  //Si se presiona una ventana
+  }
+  
+  
+  //-------------------------|Seleccionar Ventana|-------------------------
+  //Seleccionar la ventana que primero se muestre
+  //Devolverá la ventana que fue presionada y se encuentra visualizada en primer lugar
+  Lista_interfaz seleccionar () {
+    boolean presionado = false;
+    Lista_interfaz PTR = this;
+    Lista_interfaz fin = null;   //Ventana presionada
+
+    Lista_interfaz temp = PTR.previo;
+    
+   //Revisar qué ventana fue presionada
+    do {
+       
+       if (!presionado){
+         if (temp.interfaz.sobre_caja()) {  //Guardar
+           fin = temp;
+           presionado = true;
+         }
+       }
+      
+       temp = temp.previo;
+      
+    }  while (temp != PTR.previo);
+  
+  
+    if (fin != null) {  //Si se presionó una pestaña
+      
+      //Borrar seleccionada
+      (fin.previo).siguiente = fin.siguiente;
+      (fin.siguiente).previo = fin.previo;
+      
+      //Añadir al final
+      if (fin == PTR)  //Si se debe pasar el PTR al final
+        PTR = PTR.siguiente;
+        
+      fin.previo = PTR.previo;
+      fin.siguiente = PTR;
+      
+      PTR.previo.siguiente = fin;
+      PTR.previo = fin;
+    }
+    
+    return PTR;
   }
 }
