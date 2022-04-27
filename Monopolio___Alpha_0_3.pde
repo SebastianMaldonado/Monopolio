@@ -112,7 +112,7 @@ void draw(){
       break;
     case 8:  //Visualizar ventanas
       interfaz.mostrar_tablero();
-      jugadores.jugador.interfaz.cola_acciones.mostrar_ventanas();
+      jugadores.jugador.interfaz.cola_acciones.mostrar_interfaces();
       break;
     case 9:
       break;
