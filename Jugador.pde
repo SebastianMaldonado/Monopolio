@@ -41,7 +41,7 @@ class Jugador{
   
   //----------------------------|Subrutina para Movimiento|----------------------------
   void mover (Casilla posicion) {
-    if ((this.estado == 1) && (posicion != null)){  //Si el jugador está libre y posicion no es nula
+    if (this.estado == 1){  //Si el jugador está libre
       this.posicion = posicion;
       
       switch (posicion.tipo){  //Accionar según tipo de casilla
