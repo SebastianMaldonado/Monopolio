@@ -5,8 +5,6 @@
 */
 
 
-
-//Clase que define la creación de una partida
 class Juego {
   Casilla mapa;    //Lista circular con todas las casillas del juego
   
@@ -35,11 +33,7 @@ class Juego {
     Jugador nuevo_jug = new Jugador ();
     nuevo_jug.generar_jugador (nombre, color_ficha, figura_ficha, tipo, mapa);
     
-    if (jugador == 1){
-      jugadores.generar_lista(nuevo_jug);
-    } else {
-      jugadores.añadir_jug (nuevo_jug);
-    }
+    jugadores.añadir_jug (nuevo_jug);
     
     println(nuevo_jug.nombre + " ha sido generado - " + (jugador * (100 / cant_jug)) + "%");
   }
@@ -82,5 +76,22 @@ class Juego {
     } catch (IOException e) {
       print("Archivo no logró cargar");
     }
+  }
+  
+  
+  /*
+  -------------------------------------|Procedimiento de Cargado de cartas|-------------------------------------
+  Deberá existir un archivo alojado en la aplicación llamado "cartas.txt"
+  En este archivo deberá contenerse toda la información de las casillas del mapa sin contar a la casilla de inicio
+  */
+  void cargar_cartas () {
+  }
+  
+  
+  /*
+  -------------------------------------|Procedimiento para barajar las cartas|-------------------------------------
+  Procedimiento para ubicar las cartas en un orden aleatorio
+  */
+  void barajar_cartas () {
   }
 }

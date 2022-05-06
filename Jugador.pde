@@ -7,7 +7,7 @@
 
 class Jugador{
   String nombre;          //Nombre del jugador
-  PImage ficha;           //Ficha del jugador
+  String ficha;           //Ficha del jugador
   int tipo;               //Tipo de jugador: [1] humano | [2] máquina
   int saldo;              //Saldo del jugador
   Casilla propiedades;    //Propiedades del jugador
@@ -19,7 +19,7 @@ class Jugador{
   
   void generar_jugador (String nombre, int color_ficha, int figura_ficha, int tipo, Casilla posicion) {
     this.nombre = nombre;
-    this.ficha = this.seleccionar_ficha (color_ficha, figura_ficha);
+    this.ficha = "figura_jugador_" + figura_ficha + "-" + color_ficha;
     this.tipo = tipo;
     this.saldo = 1500;
     this.propiedades = null;
@@ -155,13 +155,21 @@ class Jugador{
     //-------------------------------------------------------------------------------------------------|Para hacer|
   }
   
-  
-  //-------------------------|Seleccionar Ficha del Jugador|-------------------------
-  //Selector de ficha del jugador según datos ingresados (Revisar documentación para más información)
-  PImage seleccionar_ficha (int color_ficha, int figura_ficha){
-    PImage imagen = null;
-  //-------------------------------------------------------------------------------------------------|Para hacer|
-    return imagen;
+  //----------------------------|Subrutina para Calcular Posición|----------------------------
+  void coordenadas_jug (float x, float y) {
+    int pos = this.posicion.num;
+    if (pos >= 1 && pos <= 10) {          //Primera línea: horizontal inferior
+      x = pos * (motor.MV_x/11);
+      y = motor.MV_y/11;
+    } else if (pos >= 11 && pos <= 20) {  //Segunda línea: vertical derecha
+      x = 11 * (motor.MV_x/11);      
+      y = (pos - 10) * (motor.MV_y/11);
+    } else if (pos >= 21 && pos <= 30) {  //Tercera línea: horizontal su  perior
+      x = pos * (motor.MV_x/11);
+      y = 11 * (motor.MV_y/11);
+    } else {                              //Cuarta línea: vertical izquierda
+      x = motor.MV_x/11;
+      y = (44 - pos) * (motor.MV_y/11);
+    }
   }
-
 }
