@@ -91,7 +91,7 @@ class Humano {
   La variable jugador contiene la información del jugador del que se quiere seleccionar una propiedad
   */
   Casilla mostrar_propiedades (Jugador jugador) {
-    Casilla propiedad = jugador.propiedades;
+    Casilla propiedad = jugador.propiedades.casilla;
     return propiedad;
   }
 }
