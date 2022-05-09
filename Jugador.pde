@@ -6,18 +6,18 @@
 
 
 class Jugador{
-  String nombre;          //Nombre del jugador
-  String ficha;           //Ficha del jugador
-  int tipo;               //Tipo de jugador: [1] humano | [2] máquina
-  int saldo;              //Saldo del jugador
-  Casilla propiedades;    //Propiedades del jugador
-  Casilla posicion;       //Posición del jugador
-  int estado;             //Estado del jugador: [1] libre | [2] preso | [3] bancarrota
-  Humano interfaz;        //Contenedor de la interfaz de usuario del jugador humano
-  Maquina IA;             //Contenedor de la información interna manejada por cada jugador-máquina
+  String nombre;               //Nombre del jugador
+  String ficha;                //Ficha del jugador
+  int tipo;                    //Tipo de jugador: [1] humano | [2] máquina
+  int saldo;                   //Saldo del jugador
+  Lista_casillas propiedades;  //Propiedades del jugador
+  Lista_casillas posicion;     //Posición del jugador
+  int estado;                  //Estado del jugador: [1] libre | [2] preso | [3] bancarrota
+  Humano interfaz;             //Contenedor de la interfaz de usuario del jugador humano
+  Maquina IA;                  //Contenedor de la información interna manejada por cada jugador-máquina
   
   
-  void generar_jugador (String nombre, int color_ficha, int figura_ficha, int tipo, Casilla posicion) {
+  void generar_jugador (String nombre, int color_ficha, int figura_ficha, int tipo, Lista_casillas posicion) {
     this.nombre = nombre;
     this.ficha = "figura_jugador_" + figura_ficha + "-" + color_ficha;
     this.tipo = tipo;
@@ -40,23 +40,24 @@ class Jugador{
   
   
   //----------------------------|Subrutina para Movimiento|----------------------------
-  void mover (Casilla posicion) {
+  void mover (Lista_casillas posicion) {
     if (this.estado == 1){  //Si el jugador está libre
       this.posicion = posicion;
+      Casilla casilla = posicion.casilla;
       
-      switch (posicion.tipo){  //Accionar según tipo de casilla
+      switch (casilla.tipo){  //Accionar según tipo de casilla
         case 1:  //Propiedad
-          if (posicion.propietario == null) {  //Si no tiene dueño
-            this.comprar(posicion, posicion.valor);
+          if (casilla.propietario == null) {  //Si no tiene dueño
+            this.comprar(casilla, casilla.valor);
           } else {                             //Si tiene dueño
-            this.pagar(posicion.calcular_renta());
+            this.pagar(casilla.calcular_renta());
           }
           break;
         case 2:  //Servicio
-          if (posicion.propietario == null) {  //Si no tiene dueño
-            this.comprar(posicion, posicion.valor);
+          if (casilla.propietario == null) {  //Si no tiene dueño
+            this.comprar(casilla, casilla.valor);
           } else {                             //Si tiene dueño
-            this.pagar(posicion.calcular_renta());
+            this.pagar(casilla.calcular_renta());
           }
           break;
         case 3:  //Inicio
@@ -157,7 +158,7 @@ class Jugador{
   
   //----------------------------|Subrutina para Calcular Posición|----------------------------
   void coordenadas_jug (float x, float y) {
-    int pos = this.posicion.num;
+    int pos = this.posicion.casilla.num;
     if (pos >= 1 && pos <= 10) {          //Primera línea: horizontal inferior
       x = pos * (motor.MV_x/11);
       y = motor.MV_y/11;
