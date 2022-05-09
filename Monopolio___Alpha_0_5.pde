@@ -37,17 +37,17 @@
 
 
 
-Juego partida = new Juego();  //Generar una partida nueva
-Lista_Jugadores jugadores = new Lista_Jugadores(); //Generar lista de jugadores
-Interfaz interfaz = new Interfaz ();  //Conjunto de procedimientos para la generación de la interfaz gráfica
+Juego partida = new Juego();                          //Generar una partida nueva
+Lista_Jugadores jugadores = new Lista_Jugadores();    //Generar lista de jugadores
+Interfaz interfaz = new Interfaz ();                  //Conjunto de procedimientos para la generación de la interfaz gráfica
 
-Casilla pos = null;      //Posición de movimiento
-int dado1, dado2;        //Dados
+Lista_casillas pos = null;       //Posición de movimiento
+int dado1, dado2;                //Dados
 boolean dados_lanzados = false;  //Dados lanzados
 
 boolean mouseDragged;  //Variable booleana para cuando se mantenga presionado el ratón
-int menu = 0;  //Variable de definición del Menú (Revisar Documentación para más información)
-int ind = 0;   //Variable de ciclo básico de la partida (Revisar Documentación para más información)
+int menu = 3;          //Variable de definición del Menú (Revisar Documentación para más información)
+int ind = 0;           //Variable de ciclo básico de la partida (Revisar Documentación para más información)
 
 
 void setup(){ 
@@ -59,6 +59,10 @@ void setup(){
   //Carga de Imágenes
   Pantalla_inicio = loadImage ("Pantalla de Inicio - Boceto.png");
   Pantalla_jugadores = loadImage ("Pantalla de Jugadores - Boceto.png");
+  
+  //Ajustar Imágenes
+  Pantalla_inicio.resize(width, height);
+  Pantalla_jugadores.resize(width, height);
 }
 
 
