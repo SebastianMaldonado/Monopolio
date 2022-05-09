@@ -7,6 +7,83 @@
 
 //-------------------------|Lista de Casillas|-------------------------
 //Lista enlazada circular encargada de almacenar la información de las casillas 
+class Lista_casillas {
+  Casilla casilla;            //Información de la Casilla
+  Lista_casillas siguiente;   //Siguiente dirección del mapa
+  
+  
+  Lista_casillas (Casilla casilla) {
+    this.casilla = casilla;
+    this.siguiente = null;
+  }
+  
+  
+  //Función para añadir un elemento a la lista
+  Lista_casillas añadir_propiedad (Casilla propiedad){
+    Lista_casillas lista = this;
+    Lista_casillas nuevo = new Lista_casillas (propiedad);
+    
+    if (lista.siguiente == null) {      //Si es el PTR
+      lista.siguiente = nuevo;
+      nuevo.siguiente = lista;
+    } else {                            //Si NO es el PTR
+      while (lista.siguiente != this) {
+        lista = lista.siguiente;
+      }
+      
+      lista.siguiente = nuevo;
+      nuevo.siguiente = this;
+    }
+    println(this.siguiente.casilla.nombre);
+    
+    return this;
+  }
+    
+    
+  //Función para eliminar un elemento de la lista
+  Lista_casillas eliminar_propiedad (String nombre){
+    Lista_casillas lista = this;
+    
+    while (((lista.siguiente).casilla.nombre != nombre) && (lista.siguiente != this)){
+      lista = lista.siguiente;
+    }
+    
+    if ((lista.siguiente).casilla.nombre != nombre){  //Si se encontró
+      if (lista.siguiente == this){             //Si la eliminación es el PTR
+        lista.siguiente = this.siguiente;
+        return lista;
+      } else {                                  //Si la eliminación no es el PTR
+        lista.siguiente = lista.siguiente.siguiente;
+        return this;
+      }
+    } else {                                  //Si no se encontró
+      return this;
+    }
+  }
+    
+  Lista_casillas mover_posicion (int cant, boolean dir){
+    Lista_casillas posicion = this;
+    
+    if (dir){  //Mover hacia adelante
+      for (int i = 1; i <= cant; i++){
+        posicion = posicion.siguiente;
+      }
+    } else {  //Mover hacia atrás
+      Lista_casillas Cola = this;
+      
+      for (int i = 1; i <= cant; i++){
+        while (posicion.siguiente != Cola){
+          posicion = posicion.siguiente;
+        }
+      }
+    }
+    return posicion;
+  }
+}
+
+
+//-------------------------|Casilla|-------------------------
+//Lista enlazada circular encargada de almacenar la información de las casillas 
 
 class Casilla {
     String nombre;            //Nombre de la Propiedad
@@ -24,8 +101,7 @@ class Casilla {
     int efecto_esp;           //Especificación del efecto generado (Revisar documentación para más información)
     int cant_pago;            //Almacena la cantidad de rentas que se han pagado
     int[] historial_rentas = new int[50];   //Almacena la información de todas las rentas recogidas por esta propiedad
-    
-    Casilla siguiente;      //Enlace para la siguiente casilla
+
 
     Casilla (int contador, Jugador propietario, String nombre, int color_calle, int tipo, int valor, int renta0, int renta1, int renta2, int renta3, int renta4, int renta5, int hipoteca, int casa, int efecto, int efecto_esp){
       this.nombre = nombre;
@@ -58,61 +134,6 @@ class Casilla {
     int calcular_renta (){
       return 0;
     }
-    
-    
-    //Función para añadir un elemento a la lista
-    Casilla añadir_propiedad (Casilla propiedad){
-      Casilla lista = this;
-      
-      while (lista.siguiente != this){
-        lista = lista.siguiente;
-      }
-      
-      lista.siguiente = propiedad;
-      propiedad.siguiente = this;
-      return this;
-    }
-    
-    
-    //Función para eliminar un elemento de la lista
-    Casilla eliminar_propiedad (String nombre){
-      Casilla lista = this;
-      
-      while (((lista.siguiente).nombre != nombre) && (lista.siguiente != this)){
-        lista = lista.siguiente;
-      }
-      
-      if ((lista.siguiente).nombre != nombre){  //Si se encontró
-        if (lista.siguiente == this){             //Si la eliminación es el PTR
-          lista.siguiente = this.siguiente;
-          return lista;
-        } else {                                  //Si la eliminación no es el PTR
-          lista.siguiente = lista.siguiente.siguiente;
-          return this;
-        }
-      } else {                                  //Si no se encontró
-        return this;
-      }
-    }
-    
-     Casilla mover_posicion (int cant, boolean dir){
-       Casilla posicion = this;
-       
-       if (dir){  //Mover hacia adelante
-         for (int i = 1; i <= cant; i++){
-           posicion = posicion.siguiente;
-         }
-       } else {  //Mover hacia atrás
-         Casilla Cola = this;
-         
-         for (int i = 1; i <= cant; i++){
-           while (posicion.siguiente != Cola){
-             posicion = posicion.siguiente;
-           }
-         }
-       }
-       return posicion;
-     }
 }
 
 
