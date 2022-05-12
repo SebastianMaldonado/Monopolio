@@ -5,6 +5,7 @@
 */
 
 
+
 //-------------------------|Lista de Casillas|-------------------------
 //Lista enlazada circular encargada de almacenar la información de las casillas 
 class Lista_casillas {
@@ -34,7 +35,6 @@ class Lista_casillas {
       lista.siguiente = nuevo;
       nuevo.siguiente = this;
     }
-    println(this.siguiente.casilla.nombre);
     
     return this;
   }
@@ -115,7 +115,7 @@ class Casilla {
       this.renta[3] = renta3;
       this.renta[4] = renta4;
       this.renta[5] = renta5;
-      this.construcciones = 0;
+      this.construcciones = 1;
       this.hipoteca = hipoteca;
       this.vl_casa = casa;
       this.hipotecada = false;
@@ -132,7 +132,117 @@ class Casilla {
     
     //Función para cálculo de la renta
     int calcular_renta (){
-      return 0;
+      int renta = 0;  //Cálculo de la renta
+      
+      if (this.tipo == 1) {          //Si es propiedad
+        //Por construcciones
+        renta = this.renta[this.construcciones];
+        
+        //Revisar si se tienen todas las casillas del barrio
+        boolean barrio_posesion = true;
+        Lista_casillas temp = partida.mapa;
+        
+        do {
+          if ((temp.casilla.color_calle == this.color_calle) && (temp.casilla.tipo == 1))
+            if (temp.casilla.propietario != this.propietario)
+              barrio_posesion = false;
+        } while (temp != partida.mapa);
+        
+        //Por posesión de todo el barrio
+        if (barrio_posesion)
+          renta = renta * 2;
+          
+      } else if (this.tipo == 2) {   //Si es servicio
+        if (this.color_calle == 2) {           //Si es una servicio público
+            renta = int(random(1,7)) + int(random(1,7));
+            
+            //Revisar si se tienen los dos servicios
+            boolean servicios_posesion = true;
+            Lista_casillas temp = partida.mapa;
+            
+            do {
+              if ((temp.casilla.tipo == 2) && (temp.casilla.color_calle == 2))
+                if (temp.casilla.propietario != this.propietario)
+                  servicios_posesion = false;
+            } while (temp != partida.mapa);
+            
+            //Por posesión de ambos servicios
+            if (servicios_posesion)
+              renta = renta * 10;
+            else
+              renta = renta * 4;
+              
+        } else if (this.color_calle == 1) {    //Si es un servicio de transporte
+          //Contar la cantidad de servicios de transporte en posesión
+          int contador_serv = 0;
+          Lista_casillas temp = partida.mapa;
+          
+          do {
+            if ((temp.casilla.tipo == 2) && (temp.casilla.color_calle == 1))
+              if (temp.casilla.propietario != this.propietario)
+                contador_serv = contador_serv + 1;
+          } while (temp != partida.mapa);
+          
+          //Por cantidad de tranportes en posesión
+          renta = this.renta[contador_serv];
+        }
+      }
+      
+      return renta;
+    }
+    
+    
+    //----------------------------|Subrutina para Calcular Posición|----------------------------
+    // Retorna las coordenadas de la posición en términos de valores numéricos adaptados al tamaño del mapa
+    // variable es el valor que se está pidiendo [1] para x | [2] para y
+    float coordenadas_jug (int variable) {
+      float cord = 0;
+      int pos = this.num;
+      int ind = 0;
+      
+      if (pos >= 1 && pos <= 10) {          //Primera línea: horizontal superior
+        ind = 1;
+      } else if (pos >= 11 && pos <= 20) {  //Segunda línea: vertical derecha
+        ind = 2;
+      } else if (pos >= 21 && pos <= 30) {  //Tercera línea: horizontal inferior
+        ind = 3;
+      } else {                              //Cuarta línea: vertical izquierda
+        ind = 4;
+      }
+      
+      if (variable == 1) {     //Coordenada en x
+        switch (ind) {
+          case 1:
+            cord = pos * (motor.MV_x/12);
+            break;
+          case 2:
+            cord = 11 * (motor.MV_x/12);
+            break;
+          case 3:
+            cord = (pos - 19) * (motor.MV_x/12);
+            break;
+          case 4:
+            cord = motor.MV_x/12;
+            break;
+        }
+      } else {                 //Coordenada en y
+        switch (ind) {
+          case 1:
+            cord = motor.MV_y/12;
+            break;
+          case 2:
+            cord = (pos - 10) * (motor.MV_y/12);
+            break;
+          case 3:
+            cord = 11 * (motor.MV_y/12);
+            break;
+          case 4:
+            cord = (42 - pos) * (motor.MV_y/12);
+            break;
+        }
+      }
+      
+      return cord;
     }
 }
 
@@ -223,12 +333,15 @@ class Lista_interfaz {
   //-------------------------|Mostrar Ventanas|-------------------------
   void mostrar_interfaces () {
     Lista_interfaz temp = this;
-    temp.interfaz.mostrar();
     
-    while (temp.siguiente != this) {
-      temp = temp.siguiente;
-      temp.interfaz.mostrar();
-    }
+    do {
+      if (!temp.interfaz.decision) {  //Si NO se ha tomado la decision
+        temp.interfaz.mostrar();        //Mostrar ventana
+        temp = temp.siguiente;          //Pasar a la siguiente ventana
+      } else {                        //Si se tomó la decisión
+        temp = temp.eliminar();         //Eliminar ventana
+      }
+    } while (temp != this);
     
     this.previo.interfaz.presionar();  //Si se presiona una ventana
   }
@@ -277,6 +390,16 @@ class Lista_interfaz {
     }
     
     return PTR;
+  }
+  
+  
+  Lista_interfaz eliminar () {
+    Lista_interfaz temp = this.previo;
+    
+    temp.siguiente = this.siguiente;
+    (this.siguiente).previo = temp;
+    
+    return temp.siguiente;
   }
 }
 

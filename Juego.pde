@@ -13,15 +13,16 @@ class Juego {
   
   void lanzar_dados () {
     if (!dados_lanzados) {
-      dado1 = int(random (1, 6));
-      dado2 = int(random (1, 6));
+      dado1 = int(random (1, 7));
+      dado2 = int(random (1, 7));
       dados_lanzados = true;
     }
   }
   
   void pasar_turno () {
     jugadores = jugadores.siguiente;
-    ind = 0;
+    dados_lanzados = false;
+    ind = 1;
   }
   
   /*

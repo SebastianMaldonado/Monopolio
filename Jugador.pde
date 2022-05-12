@@ -39,7 +39,10 @@ class Jugador{
   }
   
   
-  //----------------------------|Subrutina para Movimiento|----------------------------
+  /*
+  ----------------------------|Subrutina para Movimiento|----------------------------
+  Ejecuta la acción que sea necesaria al momento de caer en una determinada posición
+  */
   void mover (Lista_casillas posicion) {
     if (this.estado == 1){  //Si el jugador está libre
       this.posicion = posicion;
@@ -76,7 +79,12 @@ class Jugador{
   }
   
   
-  //----------------------------|Subrutinas para Comprar|----------------------------
+  /*
+  ----------------------------|Subrutinas para Comprar|----------------------------
+  Subrutina para redirigir una compra según el tipo de jugador
+  ejecutar_compra(), subrutina para hacer efectiva la compra después de tomar una decisión
+  ingresar la casilla y el precio al que la va a comprar ESTE jugador
+  */
   void comprar (Casilla propiedad, int precio) {
     if (this.estado != 3){  //Si el jugador NO está en bancarrota
       boolean decision = false;  //Decisión tomada si desea comprar o no la propiedad
@@ -94,13 +102,27 @@ class Jugador{
   }
   
   void ejecutar_compra (Casilla propiedad, int precio){
-        this.saldo = this.saldo - precio;
-        propiedad.propietario = this;
-        this.propiedades = this.propiedades.añadir_propiedad (propiedad);
+        this.saldo = this.saldo - precio;     //Pagar propiedad
+        
+        if (propiedad.propietario != null) {  //Si existe un propietario
+          propiedad.propietario.saldo = propiedad.propietario.saldo + precio;      //Recibir pago
+          propiedad.propietario.propiedades.eliminar_propiedad(propiedad.nombre);  //Eliminar de inventario
+        }
+        
+        propiedad.propietario = this;         //Cambiar propietario
+        this.registrar_prop(propiedad);       //Registrar en inventario
+           
+        println("Comando [Jugador]: Registrada la compra de propiedad " + this.propiedades.casilla.nombre + " por $" + precio);
+        println("Comando [Jugador]: Nuevo saldo " + this.saldo);
   }
   
   
-  //----------------------------|Subrutinas para Vender|----------------------------
+  /*
+  ----------------------------|Subrutinas para Vender|----------------------------
+  Subrutina para redirigir una venta según el tipo de jugador
+  ejecutar_venta(), subrutina para hacer efectiva la venta después de tomar una decisión
+  ingresar Jugador que va a comprar la propiedad, la propiedad en cuestión y su precio
+  */
   void prop_venta (Jugador jugador, Casilla propiedad, int precio){
     if (this.estado != 3){  //Si el jugador NO está en bancarrota
       boolean decision = false;  //Decisión tomada si desea vender o no la propiedad
@@ -115,15 +137,17 @@ class Jugador{
     }
   }
   
-  void ejecutar_venta (Jugador jugador, Casilla propiedad, int precio){
-    this.saldo = this.saldo + precio;
-    jugador.saldo = jugador.saldo - precio;
+  void ejecutar_venta (Jugador jugador, Casilla propiedad, int precio) {
+    jugador.saldo = jugador.saldo - precio;  //Pagar propiedad
+    this.saldo = this.saldo + precio;        //Recibir pago
     
-    if (propiedad.propietario != null)
-      propiedad.propietario.saldo = propiedad.propietario.saldo + precio;
-    
+    //Traspaso de Escrituras
     propiedad.propietario = jugador;
     this.propiedades = this.propiedades.eliminar_propiedad(propiedad.nombre);
+    
+    //Actualización de inventarios
+    this.propiedades = this.propiedades.eliminar_propiedad(propiedad.nombre);
+    jugador.registrar_prop(propiedad); 
   }
   
   
@@ -136,6 +160,15 @@ class Jugador{
         IA.ofertar (this);
       }
     }
+  }
+  
+  
+  //----------------------------|Subrutina para Registrar una propiedad|----------------------------
+  void registrar_prop (Casilla propiedad) {
+    if (this.propiedades == null)  //Si NO tiene propiedades
+      this.propiedades = new Lista_casillas (propiedad);
+    else                           //Si tiene propiedades
+      this.propiedades = this.propiedades.añadir_propiedad (propiedad);
   }
   
   

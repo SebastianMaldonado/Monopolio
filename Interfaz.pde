@@ -9,11 +9,28 @@ class Interfaz {
   Animacion animacion;
   boolean pasar_turno;
   
+  boolean inventario_mostrado = false;  //Para cada vez que se vaya a cargar el inventario
+  Lista_interfaz propiedades;
+  
+  //Variables de los jugadores
+    String[] nombres = new String [9];
+    int [] color_ficha = new int [9];
+    int [] figura_ficha = new int [9];
+    int [] tipo = new int [9];
+  
   Interfaz () {
     Animacion animacion = new Animacion ();  //Generador de Animaciones
     this.animacion = animacion;
   }
   
+  
+  /*
+  ---------------------------------------|Pantalla de Inicio|---------------------------------------
+   Botones: 
+     - Iniciar partida: Redirige a la configuración de una nueva partida
+     - Opciones: Redirige a la pestaña de opciones
+     - Salir: Cierra la aplicación
+  */
   void pantalla_inicio () {
     image (Pantalla_inicio, 0, 0);
     
@@ -29,7 +46,17 @@ class Interfaz {
     }
     
   }
-
+  
+  
+  /*
+  ---------------------------------------|Pantalla de Opciones|---------------------------------------
+   Botones: 
+     - Modo de Bajos Recursos: Cambia la visulacización del juego, evitando usar el motor gráfico para ahorrar recursos
+     - Aceptar: Acepta los cambios realizados y se devuelve a la pantalla de inicio
+   Barras: 
+     - Volumen Música: Gradúa el volumen de la música del juego 
+     - Volumen Efectos: Gradúa el volumen de los efectos
+  */
   void opciones () {
     //Volumen de Música
       vol_m = 1;
@@ -41,23 +68,27 @@ class Interfaz {
     //Botón de aceptar
       menu = 0;  //Volver a Inicio
   }
-
+  
+  
+  /*
+  ---------------------------------------|Pantalla de Jugadores|---------------------------------------
+   Botones: 
+     - Nuevo Jugador: Crean nuevo espacio para información de jugador y amplía la 
+     - Aceptar: Aceptar cambios y generar jugadores ingresados
+   Menú Interactivos:
+     - Jugador: Modifica la información del jugador a crear
+       - Figura de Ficha [Menú desplegable]
+       - Nombre [Caja de Texto]
+       - Color [Menú desplegable]
+       - Tipo Jugador [Menú desplegable]
+  */
   void jugadores () {
     image (Pantalla_jugadores, 0, 0);
     
     //Cantidad de jugadores de la partida
-      partida.cant_jug = 8;
-    
-    //Variables de los jugadores
-      String[] nombres = new String [9];
-      int [] color_ficha = new int [9];
-      int [] color_figura = new int [9];
-      int [] tipo = new int [9];
+      partida.cant_jug = 2;
     
     //Botón de aceptar
-      for (int i = 1; i <= partida.cant_jug; i++){
-        //partida.ingresar_jugador (i, nombres[i], color_ficha[i], color_figura[i], tipo[i]);
-      }
       menu = 3; //Pasar a la selección de Modalidades
   }
 
@@ -85,6 +116,20 @@ class Interfaz {
     //Generar mapa
       partida.generar_mapa();
       
+    //Generar jugadores
+      for (int i = 1; i <= partida.cant_jug; i++) {
+        //partida.ingresar_jugador (i, nombres[i], color_ficha[i], figura_ficha[i], tipo[i]);
+      }
+        
+      partida.ingresar_jugador (1, "Jugador 1", 0, 0, 1);
+      partida.ingresar_jugador (2, "Jugador 2", 0, 0, 1);
+    
+    //Liberar espacio
+      this.nombres = null;
+      this.color_ficha = null;
+      this.figura_ficha = null;
+      this.tipo = null;
+    
     //Barra de Carga
       partida.cargar_cartas();
       partida.barajar_cartas();
@@ -94,7 +139,11 @@ class Interfaz {
   }
 
   void mostrar_tablero () {
-    //Mostrar tablero
+    
+    //Generar variables temporales
+    float cord_x = 0, cord_y = 0;
+    
+    //-------------[Mostrar Tablero]-------------
       motor.mostrar("fila-1-columna-1", 0, 0, 1001, 1001);
       motor.mostrar("fila-1-columna-2", 1000, 0, 1001, 1001);
       motor.mostrar("fila-1-columna-3", 2000, 0, 1001, 1001);
@@ -120,18 +169,60 @@ class Interfaz {
       motor.mostrar("fila-5-columna-3", 2000, 4000, 1001, 1001);
       motor.mostrar("fila-5-columna-4", 3000, 4000, 1001, 1001);
       motor.mostrar("fila-5-columna-5", 4000, 4000, 1001, 1001);
-    //Mostrar Fichas
-      Lista_Jugadores temp = jugadores;
-      float cord_x = 0, cord_y = 0;
       
-      do  {
-        //temp.jugador.coordenadas_jug(cord_x, cord_y);
-        //motor.mostrar(temp.jugador.ficha, cord_x, cord_y, 200, 200);
-        //temp = temp.siguiente;
-      } while (temp != jugadores);
-      temp = null;
-    //Mostrar edificios
-    
+    //-------------[Mostrar Edificios]-------------
+      //Crear variables temporales
+      Lista_casillas temp_2 = partida.mapa;
+      
+      do {
+        if (temp_2.casilla.construcciones != 0) {
+          //Generar coordenadas
+          cord_x = temp_2.casilla.coordenadas_jug(1);
+          cord_y = temp_2.casilla.coordenadas_jug(2);
+          
+          //Mostrar imagen
+          switch (temp_2.casilla.construcciones) {
+            case 1:  //1 Casa
+              motor.mostrar("Casa_1", cord_x, cord_y, 50, 50);
+              break;
+            case 2:  //2 Casas
+              motor.mostrar("Casa_2", cord_x, cord_y, 50, 50);
+              break;
+            case 3:  //3 Casas
+              motor.mostrar("Casa_3", cord_x, cord_y, 50, 50);
+              break;
+            case 4:  //4 Casas
+              motor.mostrar("Casa_4", cord_x, cord_y, 50, 50);
+              break;
+            case 5:  //Castillo
+              motor.mostrar("Castillo", cord_x, cord_y, 50, 50);
+              break;
+          }
+        }
+        
+        temp_2 = temp_2.siguiente;
+      } while (temp_2 != partida.mapa);
+      
+      temp_2 = null;  //Liberar memoria
+      
+    //-------------[Mostrar Fichas]-------------
+      //Crear variables temporales
+      Lista_Jugadores temp_1 = jugadores;
+      
+      do {
+        //Generar coordenadas
+        cord_x = temp_1.jugador.posicion.casilla.coordenadas_jug(1);
+        cord_y = temp_1.jugador.posicion.casilla.coordenadas_jug(2);
+        
+        //println("Mostrar " + temp_1.jugador.nombre + " en " + cord_x + "  " + cord_y);
+        
+        motor.mostrar(temp_1.jugador.ficha, cord_x, cord_y, 200, 200);  //Mostrar imagen
+        
+        temp_1 = temp_1.siguiente;
+      } while (temp_1 != jugadores);
+      
+      temp_1 = null;  //Liberar memoria
+      
     //Botón para abrir inventario
     
     //Botón para abrir cartera
@@ -139,11 +230,37 @@ class Interfaz {
     //Botón para abrir pestaña de negocios
     
   }
-  
+
+
+  /*
+  ---------------------------------------|Inventario|---------------------------------------
+   Botones: 
+     - Propiedades [lista de ventanas]: Cada que se presione en una propiedad se desplegará la información de la misma
+     - Devolverse: Devuelve al menú principal
+  */
   void mostrar_inventario() {
+    //Cargar propiedades como ventanas
+    if (!inventario_mostrado) {
+      this.propiedades = new Lista_interfaz ();
+      Lista_casillas temp = jugadores.jugador.propiedades;
+      
+      do {  //Generar una ventana por cada propiedad en poseción del jugador
+        Ventana nuevo = new Ventana (4, 0, 0, 200, 400);  //--------------------------------------------- |Para hacer|
+        this.propiedades.añadir_cola (nuevo, 0);
+      } while (temp != jugadores.jugador.propiedades);
+      
+      inventario_mostrado = true;
+    }
+    
     //Mostrar las cartas del jugador
+    this.propiedades.mostrar_interfaces();
   }
   
+  
+  /*
+  ---------------------------------------|Cartera|---------------------------------------
+  Muestra la cantidad de billetes de que se poseen
+  */
   void mostrar_cartera () { 
     //Mostrar los billetes del jugador
   }

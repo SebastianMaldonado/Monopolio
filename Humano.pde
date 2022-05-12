@@ -19,11 +19,11 @@ class Humano {
   Por medio de la interfaz esta función retornará la decision del jugador
   */
   void comprar (Casilla propiedad, int precio) {
-    menu = 8;  //Visualizar ventanas en cola
+    //menu = 8;  //Visualizar ventanas en cola
     
     //Crear interfaz y añadirla a la cola
-    Ventana compra = new Ventana (100, 100, 300, 600);
-    cola_acciones.añadir_cola(compra, 0);
+    Ventana compra = new Ventana (2, 100, 100, 300, 600);
+    this.cola_acciones.añadir_cola(compra, 0);
   }
   
   
@@ -38,8 +38,8 @@ class Humano {
     menu = 8;  //Visualizar ventanas en cola
     
     //Crear interfaz y añadirla a la cola
-    Ventana venta = new Ventana (100, 100, 300, 600);
-    cola_acciones.añadir_cola(venta, 0);
+    Ventana venta = new Ventana (3, 100, 100, 300, 600);
+    this.cola_acciones.añadir_cola(venta, 0);
   }
   
   
