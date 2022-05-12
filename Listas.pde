@@ -5,13 +5,16 @@
 */
 
 
-
-//-------------------------|Lista de Casillas|-------------------------
-//Lista enlazada circular encargada de almacenar la información de las casillas 
+/*
+|====================================================================|
+*                        |Lista de Casillas|
+* Descripción:                                                        
+*   Lista enlazada circular encargada de almacenar la información de las casillas 
+|====================================================================|
+*/
 class Lista_casillas {
   Casilla casilla;            //Información de la Casilla
   Lista_casillas siguiente;   //Siguiente dirección del mapa
-  
   
   Lista_casillas (Casilla casilla) {
     this.casilla = casilla;
@@ -19,7 +22,7 @@ class Lista_casillas {
   }
   
   
-  //Función para añadir un elemento a la lista
+  //----------------------------|Añadir elemento|----------------------------//
   Lista_casillas añadir_propiedad (Casilla propiedad){
     Lista_casillas lista = this;
     Lista_casillas nuevo = new Lista_casillas (propiedad);
@@ -39,7 +42,8 @@ class Lista_casillas {
     return this;
   }
     
-    
+  
+  //----------------------------|Eliminar elemento|----------------------------//
   //Función para eliminar un elemento de la lista
   Lista_casillas eliminar_propiedad (String nombre){
     Lista_casillas lista = this;
@@ -60,7 +64,11 @@ class Lista_casillas {
       return this;
     }
   }
-    
+  
+  
+  //----------------------------|Moverse en la lista|----------------------------//
+  //En cant se ingresa la cantidad de casillas a desplazarse
+  //En dir se ingresa [verdadero] para moverse hacia adelante | [false] para atrás
   Lista_casillas mover_posicion (int cant, boolean dir){
     Lista_casillas posicion = this;
     
@@ -82,13 +90,18 @@ class Lista_casillas {
 }
 
 
-//-------------------------|Casilla|-------------------------
-//Lista enlazada circular encargada de almacenar la información de las casillas 
-
+/*
+|====================================================================|
+*                              |Casilla|
+* Descripción:                                                        
+*   Lista enlazada circular encargada de almacenar 
+*   la información de las casillas 
+|====================================================================|
+*/
 class Casilla {
     String nombre;            //Nombre de la Propiedad
     int num;                  //Número de la casilla
-    int color_calle;          //Color de la propiedad [1] marrón | [2] azul claro | [3] magenta | [4] naranja | [5] rojo | [6] amarillo | [7] verde | [8] azul oscuro
+    int color_calle;          //Color de la propiedad [1] marrón | [2] azul claro | [3] magenta | [4] naranja | [5] rojo | [6] amarillo | [7] verde | [8] azul oscuro || Si es un servicio [1] púbico | [2] transporte
     int tipo;                 //Tipo de casilla: [1] propiedad | [2] servicio | [3] inicio | [4] especial
     int valor;                //Valor de compra
     int[] renta = new int[6]; //Valor de la renta - según posición: [0] sin casas | [1] 1 casa | [2] 2 casas | [3] 3 casas | [4] 4 casas | [5] castillo
@@ -102,7 +115,6 @@ class Casilla {
     int cant_pago;            //Almacena la cantidad de rentas que se han pagado
     int[] historial_rentas = new int[50];   //Almacena la información de todas las rentas recogidas por esta propiedad
 
-
     Casilla (int contador, Jugador propietario, String nombre, int color_calle, int tipo, int valor, int renta0, int renta1, int renta2, int renta3, int renta4, int renta5, int hipoteca, int casa, int efecto, int efecto_esp){
       this.nombre = nombre;
       this.num = contador;
@@ -115,7 +127,7 @@ class Casilla {
       this.renta[3] = renta3;
       this.renta[4] = renta4;
       this.renta[5] = renta5;
-      this.construcciones = 1;
+      this.construcciones = 0;
       this.hipoteca = hipoteca;
       this.vl_casa = casa;
       this.hipotecada = false;
@@ -130,7 +142,8 @@ class Casilla {
       }
     }
     
-    //Función para cálculo de la renta
+    
+    //----------------------------|Calcular Renta|----------------------------//
     int calcular_renta (){
       int renta = 0;  //Cálculo de la renta
       
@@ -192,7 +205,7 @@ class Casilla {
     }
     
     
-    //----------------------------|Subrutina para Calcular Posición|----------------------------
+    //----------------------------|Calcular Posición|----------------------------//
     // Retorna las coordenadas de la posición en términos de valores numéricos adaptados al tamaño del mapa
     // variable es el valor que se está pidiendo [1] para x | [2] para y
     float coordenadas_jug (int variable) {
@@ -219,7 +232,8 @@ class Casilla {
             cord = 11 * (motor.MV_x/12);
             break;
           case 3:
-            cord = (pos - 19) * (motor.MV_x/12);
+            cord = (32 - pos) * (motor.MV_x/12);
+            println(pos - 19);
             break;
           case 4:
             cord = motor.MV_x/12;
@@ -247,9 +261,14 @@ class Casilla {
 }
 
 
-//-------------------------|Lista de Jugadores|-------------------------
-//Lista enlazada circular encargada de rotar los turnos según el orden de los jugadores
-
+/*
+|====================================================================|
+*                        |Lista de Jugadores|
+* Descripción:                                                        
+*   Lista enlazada circular encargada de rotar los turnos 
+*   según el orden de los jugadores
+|====================================================================|
+*/
 class Lista_Jugadores {
   Jugador jugador;            //Jugador en la Posición
   Lista_Jugadores siguiente;  //Siguiente jugador en el turno
@@ -273,9 +292,14 @@ class Lista_Jugadores {
 }
 
 
-//-------------------------|Lista de Ventanas|-------------------------
-//Lista doblemente enlazada circular donde se almacena la cola de las ventanas con las que el jugador podrá acceder a opciones
-
+/*
+|====================================================================|
+*                        |Lista de Ventanas|
+* Descripción:                                                        
+*   Lista doblemente enlazada circular donde se almacena la cola
+*   de las ventanas con las que el jugador podrá acceder a opciones
+|====================================================================|
+*/
 class Lista_interfaz {
   Ventana interfaz;          //Ventana almacenada
   int cont;                  //Contador de la ventana
@@ -291,7 +315,7 @@ class Lista_interfaz {
   }
   
   
-  //-------------------------|Ingresar Ventana|-------------------------
+  //-------------------------|Ingresar Ventana|-------------------------//
   //Ingresar ventana a la posición en la lista
   void Ingresar_ventana (Ventana ventana, int cont) {
     this.interfaz = ventana;
@@ -301,7 +325,7 @@ class Lista_interfaz {
   }
   
   
-  //-------------------------|Añadir a la Cola|-------------------------
+  //-------------------------|Añadir a la Cola|-------------------------//
   //Añadir nueva ventana a la cola
   Lista_interfaz añadir_cola (Ventana ventana, int cont) {
       Lista_interfaz lista = this;
@@ -317,7 +341,7 @@ class Lista_interfaz {
         
         lista = this.previo;
         
-        nuevo.siguiente = this;  //Ingresar Siguiente
+        nuevo.siguiente = this;     //Ingresar Siguiente
         nuevo.previo = this.previo; //Ingresar Anterior
         
         nuevo.interfaz.x = nuevo.interfaz.x + (50 * nuevo.cont);
@@ -330,9 +354,14 @@ class Lista_interfaz {
   }
   
   
-  //-------------------------|Mostrar Ventanas|-------------------------
+  //-------------------------|Mostrar Ventanas|-------------------------//
   void mostrar_interfaces () {
     Lista_interfaz temp = this;
+    
+    if (temp.interfaz == null) {  //Si no hay ventanas en cola
+      menu = 5;
+      return;
+    }
     
     do {
       if (!temp.interfaz.decision) {  //Si NO se ha tomado la decision
@@ -343,11 +372,12 @@ class Lista_interfaz {
       }
     } while (temp != this);
     
-    this.previo.interfaz.presionar();  //Si se presiona una ventana
+    this.previo.interfaz.mover();  //Si se mueve una ventana
+    //this.previo.interfaz.presionar();  //Si se presiona una ventana ------------------------ |Para hacer|
   }
+
   
-  
-  //-------------------------|Seleccionar Ventana|-------------------------
+  //-------------------------|Seleccionar Ventana|-------------------------//
   //Seleccionar la ventana que primero se muestre
   //Devolverá la ventana que fue presionada y se encuentra visualizada en primer lugar
   Lista_interfaz seleccionar () {
@@ -404,10 +434,15 @@ class Lista_interfaz {
 }
 
 
-//-------------------------|Lista de Imágenes|-------------------------
-//Lista enlazada circular encargada de almacenar las imágenes para utilizar en el motor gráfico
-//Ingrese una imagen de tipo .png a partir de su nombre
-
+/*
+|====================================================================|
+*                        |Lista de Imágenes|
+* Descripción:                                                        
+*   Lista enlazada circular encargada de almacenar las imágenes 
+*   para utilizar en el motor gráfico
+*   Ingrese una imagen de tipo .png a partir de su nombre
+|====================================================================|
+*/
 class Lista_imagenes {
   PImage imagen;      //Objeto imagen
   String archivo;     //Nombre archivo
@@ -417,7 +452,7 @@ class Lista_imagenes {
   Lista_imagenes siguiente;
   
   
-  //----------------------------|Subrutina para Buscar una imagen|----------------------------
+  //----------------------------|Buscar una imagen|----------------------------//
   Lista_imagenes encontrar (String nombre) {
     Lista_imagenes temp = this;
     boolean encontrado = false;
@@ -438,7 +473,7 @@ class Lista_imagenes {
   }
   
   
-  //----------------------------|Subrutina para Ingresar una imagen|----------------------------
+  //----------------------------|Ingresar una imagen|----------------------------//
   //Crea un nuevo objeto en la lista e ingresa los datos correspondientes
   void ingresar (String archivo) {
     if (this.imagen == null) {  //Ingreso de imagen por defecto
@@ -469,7 +504,7 @@ class Lista_imagenes {
   }
   
   
-  //----------------------------|Subrutina para Cargar una imagen|----------------------------
+  //----------------------------|Cargar una imagen|----------------------------//
   //Carga la imagen desde el directorio del juego
   PImage cargar () {
     PImage temp;
@@ -482,7 +517,7 @@ class Lista_imagenes {
   }
   
   
-  //----------------------------|Subrutina para Ajustar una imagen|----------------------------
+  //----------------------------|Ajustar una imagen|----------------------------//
   //Calcula la proporción de los objetos en pantalla
   void ajustar (float prop, float tm_x, float tm_y) {
     if (!ajustado) {  //Si no ha sido ajustada
@@ -500,7 +535,7 @@ class Lista_imagenes {
   }
   
   
-  //----------------------------|Subrutina para Permitir el ajuste|----------------------------
+  //----------------------------|Permitir el ajuste|----------------------------//
   //Cambia la variable ajustado de todas las imágenes de la lista
   //Por lo que cuando se muestren serán ajustadas
   void reajustar () {
@@ -514,7 +549,7 @@ class Lista_imagenes {
   }
   
   
-  //----------------------------|Subrutina para volver a cargar|----------------------------
+  //----------------------------|Volver a cargar las Imágenes|----------------------------//
   //Vuelve a cargar las imágenes para ajustar la resolución
   void refrescar () {
     Lista_imagenes temp = this;

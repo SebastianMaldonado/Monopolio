@@ -5,6 +5,15 @@
 */
 
 
+/*
+|====================================================================|
+*                              |Juego|
+* Descripción:                                                        
+*   Administrador de las funciones principales del juego
+*   Es además el encargado de cargar la información de casillas,
+*   cartas y jugadores de la partida
+|====================================================================|
+*/
 class Juego {
   Lista_casillas mapa;    //Lista circular con todas las casillas del juego
   

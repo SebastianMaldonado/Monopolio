@@ -5,6 +5,13 @@
 */
 
 
+/*
+|====================================================================|
+*                              |Humano|
+* Descripción:                                                        
+*   Objeto administrador de interfaces y decisiones del jugador humano
+|====================================================================|
+*/
 class Humano {
   Lista_interfaz cola_acciones;//Lista de todas las decisiones pendientes por tomar
   

@@ -4,6 +4,15 @@
 |----------------------------//----------------------------|
 */
 
+
+/*
+|====================================================================|
+*                              |Interfaz|
+* Descripción:                                                        
+*   Objeto administrador de interfaces y decisiones del jugador humano
+*   visualiza las ventanas y gestiona sus variables temporales
+|====================================================================|
+*/
 class Interfaz {
   
   Animacion animacion;
@@ -289,6 +298,14 @@ class Interfaz {
   
 }
 
+
+/*
+|====================================================================|
+*                          |Animación|
+* Descripción:                                                        
+*   Objeto para generar una animación
+|====================================================================|
+*/
 class Animacion {
   
   void lanzar_dados () {

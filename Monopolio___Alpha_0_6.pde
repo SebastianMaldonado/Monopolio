@@ -9,6 +9,7 @@
   Descripción de versión:
     - Implementadas las funcionalidades de las ventanas
     - Pestañas de inventario y ventanas funcionales en consola
+    - Ingresados objetos para implementación de interfaz
     - Implementado el cálculo de la renta de cada casilla
     - Arreglado error con las posiciones de la casillas de la línea inferior
   
@@ -39,13 +40,15 @@
   Lista_Jugadores jugadores = new Lista_Jugadores();    //Generar lista de jugadores
   Interfaz interfaz = new Interfaz ();                  //Conjunto de procedimientos para la generación de la interfaz gráfica
 
-Lista_casillas pos = null;       //Posición de movimiento
-int dado1, dado2;                //Dados
-boolean dados_lanzados = false;  //Dados lanzados
+//Movimiento de Casilla
+  Lista_casillas pos = null;       //Posición de movimiento
+  int dado1, dado2;                //Dados
+  boolean dados_lanzados = false;  //Dados lanzados
 
-boolean mouseDragged;    //Variable booleana para cuando se mantenga presionado el ratón
-int menu = 0;            //Variable de definición del Menú (Revisar Documentación para más información)
-int ind = 1;             //Variable de ciclo básico de la partida (Revisar Documentación para más información)
+//Interfaz
+  boolean mouseDragged;    //Variable booleana para cuando se mantenga presionado el ratón
+  int menu = 0;            //Variable de definición del Menú (Revisar Documentación para más información)
+  int ind = 1;             //Variable de ciclo básico de la partida (Revisar Documentación para más información)
 
 
 void setup(){ 
@@ -57,6 +60,10 @@ void setup(){
   //Carga de Imágenes
   Pantalla_inicio = loadImage ("Pantalla de Inicio - Boceto.png");
   Pantalla_jugadores = loadImage ("Pantalla de Jugadores - Boceto.png");
+  
+  //Ajuste del tamaño
+  Pantalla_inicio.resize(width, height);
+  Pantalla_jugadores.resize(width, height);
 }
 
 
@@ -119,21 +126,17 @@ void draw(){
     case 6:  //Inventario
       interfaz.mostrar_tablero();
       interfaz.mostrar_inventario();
-      println("Menú [Inventario]: Activado");
       break;
     case 7:  //Cartera
       interfaz.mostrar_tablero();
       interfaz.mostrar_cartera();
-      println("Menú [Cartera]: Activado");
       break;
     case 8:  //Visualizar ventanas
       interfaz.mostrar_tablero();
       jugadores.jugador.interfaz.cola_acciones.mostrar_interfaces();
-      println("Menú [Ventanas]: Activado");
       break;
     case 9:  //Negociaciones
       interfaz.mostrar_negocios();
-      println("Menú [Negocios]: Activado");
       break;
     case 10: //Pantalla del Fin del Juego 
       break;
@@ -145,9 +148,12 @@ void draw(){
 
 //----------------------------|Lectura del ratón|----------------------------
 void mousePressed(){
-  //jugadores.jugador.interfaz.cola_acciones = jugadores.jugador.interfaz.cola_acciones.seleccionar();
   if (menu >= 5 && menu <= 9) //Si se encuentra mostrando el mapa
     motor.presionar();
+    
+  if (menu == 8)  //Ventanas
+    //Seleccionar una ventana al presionarla
+    jugadores.jugador.interfaz.cola_acciones = jugadores.jugador.interfaz.cola_acciones.seleccionar();
     
   if (menu == 6)  //Inventario
     interfaz.propiedades.seleccionar();  //Seleccionar una de las propiedades
@@ -160,19 +166,27 @@ void keyPressed(){
   if ((menu == 5) && (ind == 6)) {  //Tiempo libre del Juego
     if (key == '1') {           //Inventario
       menu = 6;
+      println("Menu [Inventario]: Activado");
     } else if (key == '2') {    //Cartera
       menu = 7;
+      println("Menu [Cartera]: Activado");
     } else if (key == '3') {    //Visualizar Ventanas
       menu = 8;
+      println("Menu [Ventanas]: Activado");
     } else if (key == '4') {    //Negociaciones
       menu = 9;
+      println("Menu [Negocios]: Activado");
     } else if (key == ENTER) {  //Pasar turno
       ind = 7;
+      println("Juego: Pasando turno");
     }
   } else if ((menu >= 6) && (menu <= 9)) {  //Si se encuentra en algún menú de jugador
     if (key == ENTER)  //Devolverse
       menu  = 5;
-    }
+    
+    if (menu == 8 && key == BACKSPACE)  //Eliminar una ventana
+      jugadores.jugador.interfaz.cola_acciones.previo.interfaz.presionar();
+  }
 }
 
 void mouseWheel (MouseEvent event) {

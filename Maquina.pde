@@ -5,6 +5,14 @@
 */
 
 
+/*
+|====================================================================|
+*                              |Máquina|
+* Descripción:                                                        
+*   Discriminador de decisiones de la máquina
+*   Determina una situación según la situación del jugador
+|====================================================================|
+*/
 class Maquina {
   
   

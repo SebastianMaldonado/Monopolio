@@ -5,7 +5,17 @@
 */
 
 
-class Jugador{
+/*
+|====================================================================|
+*                              |Jugador|
+* Descripción:                                                        
+*   Contenedor de la información de los jugadores
+*   Ejecuta las diferentes acciones que puede desarrollar un jugador
+*   Puede ser humano o máquina, dependiendo de su tipo tendrá¨
+*   un objeto de la clase correspondiente
+|====================================================================|
+*/
+class Jugador {
   String nombre;               //Nombre del jugador
   String ficha;                //Ficha del jugador
   int tipo;                    //Tipo de jugador: [1] humano | [2] máquina

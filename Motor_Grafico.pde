@@ -4,44 +4,44 @@
 |-----------------------------//-----------------------------|
 */
 
-
 /*
-|| ----------------|Motor Gráfico para Juegos en 2D|----------------- ||
-||pos_x, pos_y, tm_x, tm_y corresponden a la posición y tamaño del objeto a mostrar
-||Imagen corresponde al objeto a visualizar
+|====================================================================|
+*                 |Motor Gráfico para Juegos en 2D|         
+* Descripción:                                                        
+*   Clase utilizada para visualizar un entorno gráfico interactivo
+*   Genera un mapa virtual del que según la posición de la cámara
+*   se mostrarán las imágenes con unas coordenadas relativas
+|====================================================================|
 */
-
-
 class Motor_Grafico {
-  
   //Proporción de Mapa y Cámara
-  float MV_x, MV_y;       //Tamaño del Mapa Virtual
-  float cam_x, cam_y;     //Tamaño de la Cámara
-  float cam_px, cam_py;   //Posición de la Cámara
+    float MV_x, MV_y;         //Tamaño del Mapa Virtual
+    float cam_x, cam_y;       //Tamaño de la Cámara
+    float cam_px, cam_py;     //Posición de la Cámara
   
   //Ajuste de los objetos
-  Lista_imagenes imagenes;//Lista de Imágenes y su accionar
-  float prop;             //Proporción de los objetos
+    Lista_imagenes imagenes;  //Lista de Imágenes y su accionar
+    float prop;               //Proporción de los objetos
   
   //Movimiento de la Cámara
-  float inc;              //Incremento suavizado - Movimiento
-  float incr;             //Incremento suavizado - Tamaño
-  int tm_inc;             //Tiempo desde que se presionó el incremento
-  boolean mov_mg = true;  //Movimiento de cámara
-  int cargar = 0;         //Cargar Imágenes nuevamente
+    float inc;                //Incremento suavizado - Movimiento
+    float incr;               //Incremento suavizado - Tamaño
+    int tm_inc;               //Tiempo desde que se presionó el incremento
+    boolean mov_mg = true;    //Movimiento de cámara
+    int cargar = 0;           //Cargar Imágenes nuevamente
   
   //Ratón
-  float rt_x, rt_y;       //Coordenadas virtuales del ratón 
-  
+    float rt_x, rt_y;         //Coordenadas virtuales del ratón 
   
   Motor_Grafico (int MV_x, int MV_y) {
     this.MV_x = MV_x;
     this.MV_y = MV_y;
-    
     this.imagenes = new Lista_imagenes ();
   }
   
   
+  //----------------------------|Inicialización del Motor|----------------------------//
+  //Debe de ingresarse en setup() para arrancar datos necesarios para la ejecución del motor
   void inicializar () {
     this.imagenes.ingresar("defecto");
     
@@ -52,7 +52,7 @@ class Motor_Grafico {
   }
   
   
-  //----------------------------|Subrutina para Mostrar imagen|----------------------------
+  //----------------------------|Subrutina para Mostrar imagen|----------------------------//
   //Ingresar nombre de la imagen y sus coordenadas virtuales, mostrará la imagen en las coordenadas reales
   void mostrar (String imagen, float pos_x, float pos_y, float tm_x, float tm_y) {  
     Lista_imagenes temp = this.imagenes.encontrar(imagen);  //Encontrar imagen
@@ -73,7 +73,7 @@ class Motor_Grafico {
   }
   
   
-  //----------------------------|Función de Reconocimiento|----------------------------
+  //----------------------------|Función de Reconocimiento|----------------------------//
   //Lee la posición del objeto y reconoce si se encuentra en cámara, retornará [true] si se encuentra, [false] si no
   boolean aparecer_cam (float pos_x, float pos_y, float tm_x, float tm_y) {
     
@@ -97,7 +97,7 @@ class Motor_Grafico {
   }
   
   
-  //----------------------------|Subrutina para Proporciones|----------------------------
+  //----------------------------|Subrutina para Proporciones|----------------------------//
   //Calcula la proporción de los objetos en pantalla
   void cambiar_prop () {
     this.prop = width / this.cam_x;
@@ -105,7 +105,7 @@ class Motor_Grafico {
   }
   
   
-  //----------------------------|Subrutina para Presionar el tablero|----------------------------
+  //----------------------------|Subrutina para Presionar el tablero|----------------------------//
   //Subrutina para calcular la posición virtual del ratón
   void presionar () {
     this.rt_x = (mouseX / (height / this.cam_y)) + this.cam_px;
@@ -113,7 +113,7 @@ class Motor_Grafico {
   }
   
   
-  //----------------------------|Subrutina para Mover la cámara|----------------------------
+  //----------------------------|Subrutina para Mover la cámara|----------------------------//
   //Subrutina para mover la cámara dentro del mapa virtual
   void mover () {
     this.tm_inc = millis();
@@ -150,7 +150,7 @@ class Motor_Grafico {
   }
   
   
-  //----------------------------|Subrutina para Zoom|----------------------------
+  //----------------------------|Subrutina para Zoom|----------------------------//
   //Acercamiento o alejamiento de la cámara según la rueda del ratón
   void zoom (float movimiento) {
     float num = 20;
@@ -180,7 +180,7 @@ class Motor_Grafico {
   }
   
   
-  //----------------------------|Subrutina para Reiniciar contadores|----------------------------
+  //----------------------------|Subrutina para Reiniciar contadores|----------------------------//
   //Reinicia las variables de movimiento cada medio segundo
   void reiniciar () {
     if (millis() > tm_inc + 500) {
