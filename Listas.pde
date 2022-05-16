@@ -562,3 +562,42 @@ class Lista_imagenes {
     System.gc();
   }
 }
+
+
+//Lista Cartas (poner mas bonito)
+class Lista_carta{
+ Carta carta;
+ Lista_carta siguiente;
+ 
+ Lista_carta (Carta carta){
+  this.carta = carta;
+  this.siguiente = this;
+ }
+ 
+ Lista_carta añadir_carta (Carta carta){
+   Lista_carta carta_actual = this;
+   Lista_carta nuevo = new Lista_carta(carta);
+   
+   while (carta_actual.siguiente != this){
+     carta_actual = carta_actual.siguiente;
+   }
+   
+   carta_actual.siguiente = nuevo;
+   nuevo.siguiente = this;
+   
+   return nuevo.siguiente;
+}
+
+class Carta{
+ String texto;
+ int tipo;
+ int accion;
+ int efecto;
+ 
+ Carta (String texto, int tipo, int accion, int efecto){
+   this.texto = texto;
+   this.tipo = tipo;
+   this.accion = accion;
+   this.efecto = efecto;
+ }
+}
