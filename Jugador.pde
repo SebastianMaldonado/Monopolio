@@ -53,7 +53,7 @@ class Jugador {
   ----------------------------|Subrutina para Movimiento|----------------------------
   Ejecuta la acción que sea necesaria al momento de caer en una determinada posición
   */
-  void mover (Lista_casillas posicion) {
+void mover (Lista_casillas posicion) {
     if (this.estado == 1){  //Si el jugador está libre
       this.posicion = posicion;
       Casilla casilla = posicion.casilla;
@@ -77,7 +77,31 @@ class Jugador {
           this.saldo = this.saldo + 200;
           break;
         case 4:  //Especial
-          //-------------------------------------------------------------------------------------------------|Para hacer|
+          switch (this.propiedades.casilla.efecto) {  //Dependiendo del efecto de la casilla
+            case 4:      //Si es una carta
+              if (this.propiedades.casilla.propiedad_esp == 1) {    //Si es carta de suerte
+                int accion = partida.lista_suerte.carta.accion;
+                int efecto = partida.lista_suerte.carta.efecto;
+              } else {                //Si es carta de cofre
+                int accion = partida.lista_cofre.carta.accion;
+                int efecto = partida.lista_cofre.carta.efecto;
+              }
+              
+              switch(accion){
+                case 1:
+                  jugadores.jugador.saldo = jugadores.jugador.saldo + efecto;
+                  break;
+                case 2:
+                  jugadores.jugador.pagar(efecto);
+                  break;
+                 case 3:
+                   // ----------------------------------------------------------- |Para hacer|
+                  case 4:
+                   // ----------------------------------------------------------- |Para hacer| 
+              }
+              
+              break;
+          }
           break;
       }
       
