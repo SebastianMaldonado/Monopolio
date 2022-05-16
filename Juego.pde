@@ -95,6 +95,57 @@ class Juego {
   En este archivo deberá contenerse toda la información de las casillas del mapa sin contar a la casilla de inicio
   */
   void cargar_cartas () {
+     try {
+       BufferedReader carta = createReader("suerte.txt");
+
+       String linea = carta.readLine();
+       if (linea = null){
+        return; 
+       } else {
+         String[] datos = slipt(linea, "|");
+         Carta nueva_carta = new Carta (dato[0], dato[1], dato[2], dato[3]);
+         this.lista_suerte = new Lista_carta (nueva_carta);
+       }
+
+       Lista_carta temp = lista_suerte;
+
+       while(linea = carta.redLine()!= null){
+         String[] datos = slipt(linea, "|");
+         Carta nueva_carta = new Carta (dato[0], dato[1], dato[2], dato[3]);
+
+         lista_suerte = lista_suerte.añadir_carta(nueva_carta);
+         temp = temp.siguiente;
+       }
+
+       temp.siguiente = lista_suerte;
+       suerte.close();
+
+
+       BufferedReader carta = createReader("cofre.txt");
+
+       String linea = carta.readLine();
+       if (linea = null){
+        return; 
+       } else {
+         String[] datos = slipt(linea, "|");
+         Carta nueva_carta = new Carta (dato[0], dato[1], dato[2], dato[3]);
+         this.lista_cofre = new Lista_carta (nueva_carta);
+       }
+
+       Lista_cofre temp = lista_cofre;
+
+       while(linea = carta.redLine()!= null){
+         String[] datos = slipt(linea, "|");
+         Carta nueva_carta = new Carta (dato[0], dato[1], dato[2], dato[3]);
+
+         lista_cofre = lista_suerte.añadir_carta(nueva_carta);
+         temp = temp.siguiente;
+       }
+
+       temp.siguiente = lista_cofre;
+
+    } catch (IOException e) {
+    }
   }
   
   
