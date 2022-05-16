@@ -32,6 +32,7 @@ class Juego {
     jugadores = jugadores.siguiente;
     dados_lanzados = false;
     ind = 1;
+    interfaz.inv_cargado = false;
   }
   
   /*
@@ -45,7 +46,7 @@ class Juego {
     
     jugadores.añadir_jug (nuevo_jug);
     
-    println(nuevo_jug.nombre + " ha sido generado - " + (jugador * (100 / cant_jug)) + "%");
+    println("Partida:  " + nuevo_jug.nombre + " ha sido generado - " + (jugador * (100 / cant_jug)) + "%");
   }
   
   
@@ -81,9 +82,9 @@ class Juego {
       mapa.close();
       
       this.mapa = lista;
-      println("El mapa fue generado exitosamente - 100%");
+      println("Partida:  El mapa fue generado exitosamente - 100%");
     } catch (IOException e) {
-      print("Archivo no logró cargar");
+      println("Partida:  Archivo no logró cargar");
     }
   }
   

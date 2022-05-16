@@ -14,12 +14,15 @@
 |====================================================================|
 */
 class Interfaz {
+  Menu_seleccion inventario;    //Menu de selección del Inventario
+  boolean inv_cargado;          //Booleano para verificar si los datos del inventario han sido cargados
+  
+  Menu_seleccion negocios;      //Menu de selección de Negocios
+  boolean neg_cargado;          //Booleano para verificar si los datos de la pestaña de negocios han sido cargados
   
   Animacion animacion;
   boolean pasar_turno;
   
-  boolean inventario_mostrado = false;  //Para cada vez que se vaya a cargar el inventario
-  Lista_interfaz propiedades;
   
   //Variables de los jugadores
     String[] nombres = new String [9];
@@ -28,6 +31,9 @@ class Interfaz {
     int [] tipo = new int [9];
   
   Interfaz () {
+    this.inv_cargado = false;
+    this.neg_cargado = false;
+    
     Animacion animacion = new Animacion ();  //Generador de Animaciones
     this.animacion = animacion;
   }
@@ -223,8 +229,6 @@ class Interfaz {
         cord_x = temp_1.jugador.posicion.casilla.coordenadas_jug(1);
         cord_y = temp_1.jugador.posicion.casilla.coordenadas_jug(2);
         
-        //println("Mostrar " + temp_1.jugador.nombre + " en " + cord_x + "  " + cord_y);
-        
         motor.mostrar(temp_1.jugador.ficha, cord_x, cord_y, 200, 200);  //Mostrar imagen
         
         temp_1 = temp_1.siguiente;
@@ -249,20 +253,26 @@ class Interfaz {
   */
   void mostrar_inventario() {
     //Cargar propiedades como ventanas
-    if (!inventario_mostrado) {
-      this.propiedades = new Lista_interfaz ();
+    if (!this.inv_cargado) {
+      this.inventario = new Menu_seleccion (0, 0, 3*width/5, height, 1);
+      
       Lista_casillas temp = jugadores.jugador.propiedades;
       
-      do {  //Generar una ventana por cada propiedad en poseción del jugador
-        Ventana nuevo = new Ventana (4, 0, 0, 200, 400);  //--------------------------------------------- |Para hacer|
-        this.propiedades.añadir_cola (nuevo, 0);
+      if (temp == null) {
+        this.inv_cargado = true;
+        return;
+      }
+      
+      //Ingresar propiedades en el menú
+      do {
+        this.inventario.añadir_carp(temp.casilla);
+        temp = temp.siguiente;
       } while (temp != jugadores.jugador.propiedades);
       
-      inventario_mostrado = true;
+      this.inv_cargado = true;
     }
     
-    //Mostrar las cartas del jugador
-    this.propiedades.mostrar_interfaces();
+    inventario.mostrar();
   }
   
   
@@ -275,7 +285,27 @@ class Interfaz {
   }
   
   void mostrar_negocios () {
-    //Mostrar pestaña
+    //Cargar jugadores como ventanas
+    if (!inv_cargado) {
+      this.negocios = new Menu_seleccion (0, 0, 3*width/5, height, 2);
+      
+      Lista_Jugadores temp = jugadores;
+      
+      if (temp == null) {
+        this.neg_cargado = true;
+        return;
+      }
+      
+      //Ingresar propiedades en el menú
+      do {
+        this.negocios.añadir_carp(temp.jugador);
+        temp = temp.siguiente;
+      } while (temp != jugadores);
+      
+      this.inv_cargado = true;
+    }
+    
+    this.negocios.mostrar();
   }
   
   void anuncio () {

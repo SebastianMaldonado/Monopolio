@@ -112,7 +112,7 @@ class Jugador {
   }
   
   void ejecutar_compra (Casilla propiedad, int precio){
-        this.saldo = this.saldo - precio;     //Pagar propiedad
+        this.pagar(precio);     //Pagar propiedad
         
         if (propiedad.propietario != null) {  //Si existe un propietario
           propiedad.propietario.saldo = propiedad.propietario.saldo + precio;      //Recibir pago
@@ -122,7 +122,7 @@ class Jugador {
         propiedad.propietario = this;         //Cambiar propietario
         this.registrar_prop(propiedad);       //Registrar en inventario
            
-        println("Comando [Jugador]: Registrada la compra de propiedad " + this.propiedades.casilla.nombre + " por $" + precio);
+        println("Comando [Jugador]: Registrada la compra de propiedad " + propiedad.nombre + " por $" + precio);
         println("Comando [Jugador]: Nuevo saldo " + this.saldo);
   }
   
@@ -148,7 +148,7 @@ class Jugador {
   }
   
   void ejecutar_venta (Jugador jugador, Casilla propiedad, int precio) {
-    jugador.saldo = jugador.saldo - precio;  //Pagar propiedad
+    jugador.pagar(precio);                   //Pagar propiedad
     this.saldo = this.saldo + precio;        //Recibir pago
     
     //Traspaso de Escrituras
@@ -196,7 +196,11 @@ class Jugador {
   
   //----------------------------|Subrutina para Pagar|----------------------------
   void pagar (int valor) {
-    //-------------------------------------------------------------------------------------------------|Para hacer|
+    this.saldo = this.saldo - valor;  //Ejecutar pago
+    
+    if (this.saldo < 0) {    //Si se entra en deuda
+      this.estado = 3;           //Jugador entra en bancarrota
+    }
   }
   
   //----------------------------|Subrutina para Calcular Posición|----------------------------

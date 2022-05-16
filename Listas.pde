@@ -18,7 +18,7 @@ class Lista_casillas {
   
   Lista_casillas (Casilla casilla) {
     this.casilla = casilla;
-    this.siguiente = null;
+    this.siguiente = this;
   }
   
   
@@ -27,19 +27,14 @@ class Lista_casillas {
     Lista_casillas lista = this;
     Lista_casillas nuevo = new Lista_casillas (propiedad);
     
-    if (lista.siguiente == null) {      //Si es el PTR
-      lista.siguiente = nuevo;
-      nuevo.siguiente = lista;
-    } else {                            //Si NO es el PTR
-      while (lista.siguiente != this) {
-        lista = lista.siguiente;
-      }
-      
-      lista.siguiente = nuevo;
-      nuevo.siguiente = this;
+    while (lista.siguiente != this) {
+      lista = lista.siguiente;
     }
     
-    return this;
+    lista.siguiente = nuevo;
+    nuevo.siguiente = this;
+    
+    return nuevo.siguiente;
   }
     
   
@@ -233,7 +228,6 @@ class Casilla {
             break;
           case 3:
             cord = (32 - pos) * (motor.MV_x/12);
-            println(pos - 19);
             break;
           case 4:
             cord = motor.MV_x/12;
@@ -301,7 +295,7 @@ class Lista_Jugadores {
 |====================================================================|
 */
 class Lista_interfaz {
-  Ventana interfaz;          //Ventana almacenada
+  Cont_Ventana interfaz;     //Ventana almacenada
   int cont;                  //Contador de la ventana
   
   Lista_interfaz siguiente;  //Ventana siguiente en cola
@@ -317,7 +311,7 @@ class Lista_interfaz {
   
   //-------------------------|Ingresar Ventana|-------------------------//
   //Ingresar ventana a la posición en la lista
-  void Ingresar_ventana (Ventana ventana, int cont) {
+  void Ingresar_ventana (Cont_Ventana ventana, int cont) {
     this.interfaz = ventana;
     this.cont = cont;
     this.siguiente = this;
@@ -327,11 +321,11 @@ class Lista_interfaz {
   
   //-------------------------|Añadir a la Cola|-------------------------//
   //Añadir nueva ventana a la cola
-  Lista_interfaz añadir_cola (Ventana ventana, int cont) {
+  Lista_interfaz añadir_cola (Cont_Ventana ventana, int cont) {
       Lista_interfaz lista = this;
       
       if (this.interfaz == null){  //Si la cola está limpia
-        ventana.x = ventana.x + (50 * cont);
+        ventana.ventana.x = ventana.ventana.x + (50 * cont);
         this.Ingresar_ventana (ventana, cont);
         
         return this;
@@ -344,7 +338,7 @@ class Lista_interfaz {
         nuevo.siguiente = this;     //Ingresar Siguiente
         nuevo.previo = this.previo; //Ingresar Anterior
         
-        nuevo.interfaz.x = nuevo.interfaz.x + (50 * nuevo.cont);
+        nuevo.interfaz.ventana.x = nuevo.interfaz.ventana.x + (50 * nuevo.cont);
         
         lista.siguiente = nuevo;
         this.previo = nuevo;
@@ -364,7 +358,7 @@ class Lista_interfaz {
     }
     
     do {
-      if (!temp.interfaz.decision) {  //Si NO se ha tomado la decision
+      if (!temp.interfaz.ventana.decision) {  //Si NO se ha tomado la decision
         temp.interfaz.mostrar();        //Mostrar ventana
         temp = temp.siguiente;          //Pasar a la siguiente ventana
       } else {                        //Si se tomó la decisión
