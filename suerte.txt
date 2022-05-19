@@ -1,0 +1,19 @@
+Ve a la salida|3|1|0
+Ve a la 3ra calle roja|3|25|0
+Sal de la carcel|4|0|0
+Avanza a la 1ra calle magenta|3|12|0
+Ve al 1er ferrocarril|3|6|0
+Paga la cuenta del hospital por $50|2|50|1
+Ve a la cárcel|3|11|0
+Ve al 2da calle azul oscura|3|40|0
+Error de la banca. Recibes $50|1|50|0
+Ganaste una hackaton por $150|1|150|0
+Se quemaron tus casas. Paga $25 por cada una|2|25|3
+Paga la suscripción de Netflix $15|2|15|1
+Multa por embriaguez $20|2|20|1
+Repara tus edificos $100|2|100|3
+Quedas libre de la cárcel|4|0|0
+Subió el Kamicoin. Ganas $150|1|150|0
+
+
+
