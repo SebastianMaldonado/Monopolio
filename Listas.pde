@@ -590,13 +590,11 @@ class Lista_carta{
 
 class Carta{
  String texto;
- int tipo;
  int accion;
  int efecto;
  
  Carta (String texto, int tipo, int accion, int efecto){
    this.texto = texto;
-   this.tipo = tipo;
    this.accion = accion;
    this.efecto = efecto;
  }
