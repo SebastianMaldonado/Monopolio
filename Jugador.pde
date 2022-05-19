@@ -100,7 +100,7 @@ void mover (Lista_casillas posicion) {
                       jugadores.jugador.pagar(efecto);
                       break;
                     case 2:                                         //Pago por tipo y cantidad de propiedad
-                      jugadores.jugador.pagar(efecto*(juego.cant_jug));
+                      jugadores.jugador.pagar(efecto*());
                       break;
                   }
                   break;
