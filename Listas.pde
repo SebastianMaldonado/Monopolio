@@ -563,8 +563,13 @@ class Lista_imagenes {
   }
 }
 
-
-//Lista Cartas (poner mas bonito)
+/*
+|====================================================================|
+*                        |Lista de Cartas|
+* Descripción:                                                        
+*   Lista enlazada circular encargada de almacenar la información de las cartas
+|====================================================================|
+*/
 class Lista_carta{
  Carta carta;
  Lista_carta siguiente;
@@ -595,7 +600,7 @@ class Carta{
  
  Carta (String texto, int tipo, int accion, int efecto){
    this.texto = texto;
-   this.accion = accion;
-   this.efecto = efecto;
+   this.accion = accion; [1]Recibir dinero [2]Pagar dinero [3]Moverse [4]Conservar carta
+   this.efecto = efecto; valor del efecto
  }
 }
