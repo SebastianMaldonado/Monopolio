@@ -94,14 +94,13 @@ void mover (Lista_casillas posicion) {
                 case 2:   //Restar dinero al valor neto del jugador
                   jugadores.jugador.pagar(efecto);
                   break;
-                 case 3:   //Pagar de acuerdo a la cantidad de jugadores
+                 case 3:   //Pagar de acuerdo
+                   //[0]Pago directo [1]Pago por cantidad de jugadores [2]Pago por tipo propiedad
                    // ----------------------------------------------------------- |Para hacer|
                   case 4:  //Moverse de casilla
                    // ----------------------------------------------------------- |Para hacer|
                   case 5:  //Conservar carta
                    // ----------------------------------------------------------- |Para hacer|
-                  case 3:   //Pagar de acuerdo a la cantidad de tipo propiedad
-                  // ----------------------------------------------------------- |Para hacer|
               }
               
               break;
