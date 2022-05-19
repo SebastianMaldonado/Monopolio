@@ -82,9 +82,11 @@ void mover (Lista_casillas posicion) {
               if (this.propiedades.casilla.propiedad_esp == 1) {    //Si es carta de suerte
                 int accion = partida.lista_suerte.carta.accion;
                 int efecto = partida.lista_suerte.carta.efecto;
+                int tipo_pago = partida.lista_suerte.carta.tipo_pago;
               } else {                //Si es carta de cofre
                 int accion = partida.lista_cofre.carta.accion;
                 int efecto = partida.lista_cofre.carta.efecto;
+                int tipo_pago = partida.lista_suerte.carta.tipo_pago;
               }
               
               switch(accion){
@@ -92,14 +94,23 @@ void mover (Lista_casillas posicion) {
                   jugadores.jugador.saldo = jugadores.jugador.saldo + efecto;
                   break;
                 case 2:   //Restar dinero al valor neto del jugador
+                  //[1]Pago directo [2]Pago por cantidad de jugadores [3]Pago por tipo propiedad
+                  
+                  switch(tipo_pago){
+                    case 1:
+                      jugadores.jugador.pagar(efecto);
+                    case 2:
+                      jugadores.jugador.pagar(efecto*());
+                  }
+                  
                   jugadores.jugador.pagar(efecto);
                   break;
                  case 3:   //Pagar de acuerdo
                    //[0]Pago directo [1]Pago por cantidad de jugadores [2]Pago por tipo propiedad
                    // ----------------------------------------------------------- |Para hacer|
-                  case 4:  //Moverse de casilla
+                  case 3:  //Moverse de casilla
                    // ----------------------------------------------------------- |Para hacer|
-                  case 5:  //Conservar carta
+                  case 4:  //Conservar carta
                    // ----------------------------------------------------------- |Para hacer|
               }
               
