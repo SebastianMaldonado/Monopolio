@@ -592,15 +592,16 @@ class Lista_carta{
    
    return nuevo.siguiente;
 }
-
 class Carta{
  String texto;
  int accion;
  int efecto;
+ int tipo_pago;
  
  Carta (String texto, int tipo, int accion, int efecto){
    this.texto = texto;
    this.accion = accion; //[1]Recibir dinero [2]Pagar dinero [3]Moverse [4]Conservar carta
-   this.efecto = efecto; valor del efecto
+   this.efecto = efecto; //valor del efecto
+   this.tipo_pago = tipo_pago; //[1]Pago directo [2]Pago por cantidad de propiedades
  }
 }
