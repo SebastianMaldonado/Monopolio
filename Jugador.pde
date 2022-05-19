@@ -83,34 +83,30 @@ void mover (Lista_casillas posicion) {
                 int accion = partida.lista_suerte.carta.accion;
                 int efecto = partida.lista_suerte.carta.efecto;
                 int tipo_pago = partida.lista_suerte.carta.tipo_pago;
-              } else {                //Si es carta de cofre
+              } else {                                              //Si es carta de cofre
                 int accion = partida.lista_cofre.carta.accion;
                 int efecto = partida.lista_cofre.carta.efecto;
-                int tipo_pago = partida.lista_suerte.carta.tipo_pago;
+                int tipo_pago = partida.lista_cofre.carta.tipo_pago;
               }
               
               switch(accion){
-                case 1:   //Sumar dinero al valor neto del jugador
+                case 1:                                             //Sumar dinero al valor neto del jugador
                   jugadores.jugador.saldo = jugadores.jugador.saldo + efecto;
                   break;
-                case 2:   //Restar dinero al valor neto del jugador
-                  //[1]Pago directo [2]Pago por cantidad de jugadores [3]Pago por tipo propiedad
-                  
+                case 2:                                             //Restar dinero al valor neto del jugador
+                  //[1][2]
                   switch(tipo_pago){
-                    case 1:
+                    case 1:                                         //Pago directo 
                       jugadores.jugador.pagar(efecto);
-                    case 2:
-                      jugadores.jugador.pagar(efecto*());
+                      break;
+                    case 2:                                         //Pago por tipo y cantidad de propiedad
+                      jugadores.jugador.pagar(efecto*(juego.cant_jug));
+                      break;
                   }
-                  
-                  jugadores.jugador.pagar(efecto);
                   break;
-                 case 3:   //Pagar de acuerdo
-                   //[0]Pago directo [1]Pago por cantidad de jugadores [2]Pago por tipo propiedad
+                  case 3:                                            //Moverse de casilla
                    // ----------------------------------------------------------- |Para hacer|
-                  case 3:  //Moverse de casilla
-                   // ----------------------------------------------------------- |Para hacer|
-                  case 4:  //Conservar carta
+                  case 4:                                            //Conservar carta
                    // ----------------------------------------------------------- |Para hacer|
               }
               
