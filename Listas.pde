@@ -600,7 +600,7 @@ class Carta{
  
  Carta (String texto, int tipo, int accion, int efecto){
    this.texto = texto;
-   this.accion = accion; [1]Recibir dinero [2]Pagar dinero [3]Moverse [4]Conservar carta
+   this.accion = accion; //[1]Recibir dinero [2]Pagar dinero [3]Moverse [4]Conservar carta
    this.efecto = efecto; valor del efecto
  }
 }
