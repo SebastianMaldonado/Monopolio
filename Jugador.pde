@@ -88,16 +88,20 @@ void mover (Lista_casillas posicion) {
               }
               
               switch(accion){
-                case 1:
+                case 1:   //Sumar dinero al valor neto del jugador
                   jugadores.jugador.saldo = jugadores.jugador.saldo + efecto;
                   break;
-                case 2:
+                case 2:   //Restar dinero al valor neto del jugador
                   jugadores.jugador.pagar(efecto);
                   break;
-                 case 3:
+                 case 3:   //Pagar de acuerdo a la cantidad de jugadores
                    // ----------------------------------------------------------- |Para hacer|
-                  case 4:
-                   // ----------------------------------------------------------- |Para hacer| 
+                  case 4:  //Moverse de casilla
+                   // ----------------------------------------------------------- |Para hacer|
+                  case 5:  //Conservar carta
+                   // ----------------------------------------------------------- |Para hacer|
+                  case 3:   //Pagar de acuerdo a la cantidad de tipo propiedad
+                  // ----------------------------------------------------------- |Para hacer|
               }
               
               break;
