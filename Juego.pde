@@ -93,6 +93,10 @@ class Juego {
   -------------------------------------|Procedimiento de Cargado de cartas|-------------------------------------
   Deberá existir un archivo alojado en la aplicación llamado "suerte.txt" y "cofre.txt"
   En este archivo deberá contenerse toda la información de las cartas
+  dato[0] = texto 
+  dato[1] = acción
+  dato[2] = efecto
+  dato[3] = tipo de pago
   */
   void cargar_cartas () {
      try {
@@ -149,9 +153,10 @@ class Juego {
 
        //Enlace para ser lista circular
        temp.siguiente = lista_cofre;
-       cofre.close()
+       cofre.close();
 
     } catch (IOException e) {
+      println("Partida:  Archivo no logró cargar");
     }
   }
   
