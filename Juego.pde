@@ -91,13 +91,14 @@ class Juego {
   
   /*
   -------------------------------------|Procedimiento de Cargado de cartas|-------------------------------------
-  Deberá existir un archivo alojado en la aplicación llamado "cartas.txt"
-  En este archivo deberá contenerse toda la información de las casillas del mapa sin contar a la casilla de inicio
+  Deberá existir un archivo alojado en la aplicación llamado "suerte.txt" y "cofre.txt"
+  En este archivo deberá contenerse toda la información de las cartas
   */
   void cargar_cartas () {
      try {
        BufferedReader carta = createReader("suerte.txt");
 
+       //Lectura de la información de cada carta tipo suerte
        String linea = carta.readLine();
        if (linea = null){
         return; 
@@ -109,6 +110,7 @@ class Juego {
 
        Lista_carta temp = lista_suerte;
 
+       //Crear objeto Carta con la información
        while(linea = carta.redLine()!= null){
          String[] datos = slipt(linea, "|");
          Carta nueva_carta = new Carta (dato[0], dato[1], dato[2], dato[3]);
@@ -117,14 +119,16 @@ class Juego {
          temp = temp.siguiente;
        }
 
+       //Enlace para ser lista circular
        temp.siguiente = lista_suerte;
        suerte.close();
 
 
        BufferedReader carta = createReader("cofre.txt");
-
+        
+       //Lectura de la información de cada carta tipo cofre
        String linea = carta.readLine();
-       if (linea = null){
+       if (linea = null){   //Si la linea esta vacía, se detiene la lectura
         return; 
        } else {
          String[] datos = slipt(linea, "|");
@@ -134,15 +138,18 @@ class Juego {
 
        Lista_cofre temp = lista_cofre;
 
+       //Crear objeto Carta con la información
        while(linea = carta.redLine()!= null){
          String[] datos = slipt(linea, "|");
          Carta nueva_carta = new Carta (dato[0], dato[1], dato[2], dato[3]);
 
-         lista_cofre = lista_suerte.añadir_carta(nueva_carta);
+         lista_cofre = lista_cofre.añadir_carta(nueva_carta);
          temp = temp.siguiente;
        }
 
+       //Enlace para ser lista circular
        temp.siguiente = lista_cofre;
+       cofre.close()
 
     } catch (IOException e) {
     }
