@@ -107,7 +107,7 @@ class Juego {
        if (linea = null){
         return; 
        } else {
-         String[] datos = slipt(linea, "|");
+         String[] dato = slipt(linea, "|");
          Carta nueva_carta = new Carta (dato[0], dato[1], dato[2], dato[3]);
          this.lista_suerte = new Lista_carta (nueva_carta);
        }
@@ -116,7 +116,7 @@ class Juego {
 
        //Crear objeto Carta con la información
        while(linea = carta.redLine()!= null){
-         String[] datos = slipt(linea, "|");
+         String[] dato = slipt(linea, "|");
          Carta nueva_carta = new Carta (dato[0], dato[1], dato[2], dato[3]);
 
          lista_suerte = lista_suerte.añadir_carta(nueva_carta);
@@ -135,7 +135,7 @@ class Juego {
        if (linea = null){   //Si la linea esta vacía, se detiene la lectura
         return; 
        } else {
-         String[] datos = slipt(linea, "|");
+         String[] dato = slipt(linea, "|");
          Carta nueva_carta = new Carta (dato[0], dato[1], dato[2], dato[3]);
          this.lista_cofre = new Lista_carta (nueva_carta);
        }
@@ -144,7 +144,7 @@ class Juego {
 
        //Crear objeto Carta con la información
        while(linea = carta.redLine()!= null){
-         String[] datos = slipt(linea, "|");
+         String[] dato = slipt(linea, "|");
          Carta nueva_carta = new Carta (dato[0], dato[1], dato[2], dato[3]);
 
          lista_cofre = lista_cofre.añadir_carta(nueva_carta);
