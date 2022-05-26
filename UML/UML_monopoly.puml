@@ -1,0 +1,125 @@
+@startuml
+package Humano <<Rectangle>>{
+class Humano{
++ cola_acciones: Lista_interfaz
+
++ Humano(): constructor
++ comprar (Casilla propiedad, int precio): void
++ vender_propiedad (Jugador jugador, Casilla propiedad, int precio): void
++ ofertar (Jugador ofertante): void
++ vender (Jugador vendedor): void
++ mostrar_jugadores (Jugador jugador): Jugador jugador
++ mostrar_propiedades (Jugador jugador): Casilla propiedad
++ contar_ventanas (): int num
+}
+}
+
+package Juego <<Rectangle>>{
+class Juego{
++ mapa: Lista_casillas
++ cant_jug: int
++ cant_casas: int 32
++ cant_castillos: int 12
++ of_pausa: int[]
++ lanzar_dados (): void
++ ingresar_jugador (int jugador, String nombre,
+int color_ficha, int figura_ficha, int tipo): void
++ generar_mapa (): void
++ pasar_turno (): void
++ verificar_fin (): void
++ hipotecar (Casilla propiedad): void
++ construir (Casilla propiedad): void
++ cargar_cartas (): void
++ barajar_cartas (): void
+}
+}
+
+package Jugador <<Rectangle>>{
+class Jugador{
++ nombre: String
++ ficha: String
++ tipo: int
++ saldo: int
++ propiedades: Lista_casillas
++ posicion: Lista_casillas
++ estado: int
++ interfaz: Humano
++ IA: Mquina
+
++ generar_jugador (String nombre, int color_ficha,
+int figura_ficha, int tipo, Lista_casillas posicion): void
++ mover (Lista_casillas posicion): void
++ comprar (Casilla propiedad, int precio): void
++ ejecutar_compra (Casilla propiedad, int precio): void
++ prop_venta (Jugador jugador, Casilla propiedad, int precio): void
++ ejecutar_venta (Jugador jugador, Casilla propiedad, int precio): void
++ ofertar(): void
++ registrar_prop (Casilla propiedad): void
++ eliminar_prop (Casilla propiedad): void
++ vender(): void
++ pagar (int valor): void
++ coordenadas_jug (float x, float y): void
+}
+}
+
+package Listas <<Rectangle>>{
+class Lista_casilla{
++ casilla: Casilla
++ siguiente: Lista_casilla
+
++ Lista_casillas (Casilla casilla): constructor
++ añadir_propiedad (Casilla propiedad): Lista_casillas nuevo.siguiente
++ eliminar_propiedad (String nombre): Lista_casillas this
++ mover_posicion (int cant, boolean dir): Lista_casillas posicion
+}
+
+class Casilla{
++ nombre: String
++ num: int
++ color_calle: int
++ tipo: int
++ valor: int
++ renta: int[6]
++ contrsucciones: int
++ hiopoteca: int
++ vl_casa: int
++ hipotecada: boolean
++ propietario: Jugador
++ efecto: int
++ efecto_esp: int
++ cant_pago: int
++ historial_rentas: int[50]
++ frente: PImage
++ reverso: PImage
+
++ Casilla (int contador, propietario, nombre, color_calle, tipo, valor, renta0,
+renta1, renta2, renta3, renta4, renta5, hipoteca, casa, efecto, efecto_esp): constructor
++ calcular_renta (): int renta
++ coordenadas_jug (int variable): float cord
+}
+
+class Lista_Jugadores{
++ jugador: Jugador
++ siguiente: Lista_Jugadores
+
++ añadir_jug (Jugador jugador): void
+}
+}
+
+package Maquina <<Rectangle>>{
+class Maquina{
+
++ comprar (Jugador jugador, Casilla propiedad, int precio): boolean false
++ vender_propiedad (Jugador jugador, Casilla propiedad, int precio): boolean false
++ ofertar (Jugador jugador): void
++ vender (Jugador jugador): void
++ evaluar (Jugador jugador): void
+}
+}
+
+Lista_casilla *-- Casilla
+Juego *-- Lista_casilla
+Lista_Jugadores *-- Jugador
+Jugador *-- Maquina
+Jugador *-- Humano
+@enduml
