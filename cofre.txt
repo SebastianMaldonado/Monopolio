@@ -1,16 +1,16 @@
-Avanza a la salida|3|1|0
-Inviertes en $150 en Kamicoin|2|150|0
-Te encuentras $10|1|15|0
-Sales de la cárcel|4|0|0
-Pagas tu seguro de vida $100|2|1|100
-¡Feliz cumpleaños! Toma $100|1|100|0
-Ve a la cárcel|3|11|0
-Paga el impuesto de propiedad $20|2|20|2
-Donas $100 a una fundación|2|100|1
-Ganas un concurso de baile $25|1|25|0
-Vendes tus acciones. Ganas $50|1|50|0
-Cada jugador te da $10|||
-Cabras la herencia $100|1|100|0
-Ve a la calle 1ra amarilla|3|28|0
-Ganas $10 por guapo :)|1|10|0
-Ve a la 3ra calle azul claro|3|10|0
+1|1|0|Avanza a la salida
+2|3|150|Pierdes $150
+3|2|10|Ganas $10
+4|4|1|Todos salen de la Cárcel
+5|3|100|Pierdes $100
+6|2|100|Ganas $100
+7|4|2|Ve a la cárcel
+8|3|20|Paga $20
+9|3|100|Paga $100
+10|2|25|Ganas $25
+11|2|50|Ganas $50
+12|2|10|Ganas $10
+13|2|400|Ganas $400
+14|1|10|Muévete 10 posiciones
+15|2|10|Ganas $10
+16|1|-5|Retrocedes 5 posiciones

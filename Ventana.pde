@@ -27,15 +27,19 @@ class Ventana {
   boolean mov = false;          //Booleano para saber si se está moviendo
   boolean mouse_tm = false;     //Booleano para seleccionar la caja con un solo click
   boolean decision;             //Booleano para cerrar la ventana
+  PImage img;                   //Imagen de la ventana
   Boton aceptar;                //Botón para aceptar la información de la ventana
+  Boton cancelar;               //Botón para cancelar la información de la ventana
   
-  Ventana (float x, float y, float tx, float ty) {
+  Ventana (PImage img, float x, float y, float tx, float ty) {
+    this.img = img;
     this.x = x;
     this.y = y;
     this.tx = tx;
     this.ty = ty;
     this.decision = false;
-    this.aceptar = new Boton (int((tx/4) + x), int((ty - ty/5) + y), int(tx/2), int(ty/6));
+    this.aceptar = new Boton (int((tx/9) + x), int((ty - ty/5) + y), int(3*tx/9), int(ty/10));
+    this.cancelar = new Boton ( + int((5*tx/9) + x), int((ty - ty/5) + y), int(3*tx/9), int(ty/10));
   }
   
   
@@ -84,9 +88,11 @@ class Ventana {
         this.x = mouseX - this.x_margen; 
         this.y = mouseY - this.y_margen; 
         
-        //Desplazar Botón
-        this.aceptar.vx = int((this.tx/4) + this.x);
+        //Desplazar Botones
+        this.aceptar.vx = int((this.tx/9) + this.x);
         this.aceptar.vy = int((this.ty - this.ty/5) + this.y);  
+        this.cancelar.vx = int((5*this.tx/9) + this.x);
+        this.cancelar.vy = int((this.ty - this.ty/5) + this.y);  
       }
     }
   }
@@ -102,8 +108,13 @@ class Ventana {
   //-------------------------|Mostrar Ventana|-------------------------//
   void mostrar () {
     //Visualización de la pestaña
-    rect (this.x, this.y, this.tx, this.ty);
-    this.aceptar.mostrar(this.aceptar.vx, this.aceptar.vy);
+    if (this.img == null) {
+      rect (this.x, this.y, this.tx, this.ty);
+      this.cancelar.mostrar(this.cancelar.vx, this.cancelar.vy);
+      this.aceptar.mostrar(this.aceptar.vx, this.aceptar.vy);
+    } else {
+      image (this.img, this.x, this.y, this.tx, this.ty);
+    }
   }
   
   //-------------------------|Botón de Aceptar|-------------------------//
@@ -126,15 +137,30 @@ class V_Anuncio extends Ventana {
   PImage imagen;     //Imagen del anuncio
   
   V_Anuncio (String mensaje, PImage imagen, float x, float y, float tx, float ty) {
-    super(x, y, tx, ty);
+    super(null, x, y, tx, ty);
     this.mensaje = mensaje;
     this.imagen = imagen;
   }
   
   
-  //-------------------------|Cerrar Ventana|-------------------------
+  //-------------------------|Mostrar Ventana|-------------------------//
+  void mostrar () {
+    if (this.imagen == null)
+      rect (this.x, this.y, this.tx, this.ty);
+    else
+      image (this.imagen, this.x, this.y, this.tx, this.ty);
+      
+    fill (0);
+    textSize((25*width)/1920);
+    textAlign(CENTER);
+    text (this.mensaje, this.x + this.tx/5, this.y + this.ty/8, this.tx*3/5, this.ty*6/8);
+    fill (255);
+  }
+  
+  
+  //-------------------------|Cerrar Ventana|-------------------------//
   void aceptar () {
-    if (this.aceptar.sobre_boton()) {  //Si se presiona
+    if (this.sobre_caja()) {  //Si se presiona
       this.decision = true;  //Cerrar ventana
     }
   }
@@ -157,10 +183,10 @@ class V_Compra extends Ventana {
   int precio;          //Precio de la propiedad a comprar
   
   V_Compra (Casilla propiedad, int precio, float x, float y, float tx, float ty) {
-    super(x, y, tx, ty);
+    super(loadImage("Carta.png"), x, y, tx, ty);
     this.propiedad = propiedad;
     this.precio = precio;
-    this.tarjeta = new Tarjeta_itr (null, null, int(tx/8 + x), int(ty/40 + y), int(6*tx/8), int(6*ty/8));
+    this.tarjeta = new Tarjeta_itr (propiedad.frente, propiedad.reverso, int(tx/8 + x), int(ty/40 + y), int(6*tx/8), int(6*ty/8));
   }
   
   
@@ -169,7 +195,11 @@ class V_Compra extends Ventana {
   void aceptar () {
     if (this.sobre_caja() && !decision)
       this.tarjeta.presionar();
-    if (this.aceptar.sobre_boton() && !decision) {
+    if (this.cancelar.sobre_boton() && !decision) {  //Compra Cancelada
+      this.decision = true;
+      return;
+    }
+    if (this.aceptar.sobre_boton() && !decision) {    //Compra realizada
       this.decision = true;
       jugadores.jugador.ejecutar_compra(propiedad, precio);
     }
@@ -177,10 +207,11 @@ class V_Compra extends Ventana {
   
   //-------------------------|Mostrar Ventana|-------------------------//
   void mostrar () {
+    //println("mostrando compra");
     super.mostrar();
-    this.tarjeta.mostrar();
     this.tarjeta.vx = int(this.tx/8 + this.x);
     this.tarjeta.vy = int(this.ty/40 + this.y);
+    this.tarjeta.mostrar();
   }
   
   
@@ -203,24 +234,47 @@ class V_Compra extends Ventana {
 */
 class V_Venta extends Ventana {
   Jugador jugador;     //Jugador que ejecutará la acción
+  Tarjeta_itr tarjeta; //Tarjeta de la propiedad
   Casilla propiedad;   //Propiedad a comprar
   int precio;          //Precio de la propiedad a comprar
   
   V_Venta (Jugador jugador, Casilla propiedad, int precio, float x, float y, float tx, float ty) {
-    super(x, y, tx, ty);
+    super(loadImage("Carta.png"), x, y, tx, ty);
     this.jugador = jugador;
     this.propiedad = propiedad;
     this.precio = precio;
+    this.tarjeta = new Tarjeta_itr (propiedad.frente, propiedad.reverso, int(tx/8 + x), int(ty/40 + y), int(6*tx/8), int(6*ty/8));
   }
   
   
   //-------------------------|Aceptar venta|-------------------------//
   //Ejecutará la venta de la propiedad
   void aceptar () {
-    if (this.aceptar.sobre_boton() && !decision) {
+    if (this.sobre_caja() && !decision)
+      this.tarjeta.presionar();
+    if (this.cancelar.sobre_boton() && !decision) {  //Venta Cancelada
+      this.decision = true;
+      return;
+    }
+    if (this.aceptar.sobre_boton() && !decision) {  //Venta realizada
       this.decision = true;
       jugadores.jugador.ejecutar_venta(jugador, propiedad, precio);
     }
+  }
+  
+  
+  //-------------------------|Mostrar Ventana|-------------------------//
+  void mostrar () {
+    super.mostrar();
+    this.tarjeta.vx = int(this.tx/8 + this.x);
+    this.tarjeta.vy = int(this.ty/40 + this.y);
+    this.tarjeta.mostrar();
+  }
+  
+  
+  //-------------------------|Mover Ventana|-------------------------//
+  void mover () {
+    super.mover();
   }
 }
 

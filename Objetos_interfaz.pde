@@ -32,9 +32,8 @@ class Boton {
   
   
   //-------------------------|Ingresar imagen|-------------------------//
-  void Ingresar_imagen (PImage imagen) {
-    if (imagen != null)
-      this.imagen = imagen;
+  void ingresar_imagen (PImage imagen) {
+    this.imagen = imagen;
   }
   
   
@@ -67,10 +66,10 @@ class Boton {
     }
   }
   
-  
-  void presionar () {
-    if (this.sobre_boton())
-      println("Presionado Botón");
+  //-------------------------|Retornar|-------------------------//
+  //Método funcional implementado para retornar la información de las clases hijas
+  Capsula_CJ retornar () {
+    return null;
   }
 }
 
@@ -85,11 +84,11 @@ class Boton {
 |====================================================================|
 */
 class Carpeta_casilla extends Boton {
-  Casilla dato;  //Información de la casilla que contiene
+  Capsula_CJ dato;  //Información de la casilla que contiene
   
   Carpeta_casilla (Casilla casilla, int x, int y, int tx, int ty) {
     super (x, y, tx, ty);
-    this.dato = casilla;
+    this.dato = new Capsula_CJ (casilla);
   }
   
   
@@ -101,16 +100,15 @@ class Carpeta_casilla extends Boton {
     fill(0);
     textAlign(CENTER);
     textSize(20);
-    text(this.dato.nombre, op_x, op_y + this.ty/5, this.tx, this.ty);
+    text(this.dato.casilla.nombre, op_x, op_y + this.ty/5, this.tx, this.ty);
     fill(255);  
   }
   
   
-  //-------------------------|Presionar|-------------------------//
+  //-------------------------|Retornar|-------------------------//
   //Devuelve la información de la casilla que contiene
-  void presionar () {
-    if (this.sobre_boton())
-      println(this.dato.nombre);
+  Capsula_CJ retornar () {
+    return dato;
   }
 }
 
@@ -125,11 +123,11 @@ class Carpeta_casilla extends Boton {
 |====================================================================|
 */
 class Carpeta_jugador extends Boton {
-  Jugador dato;
+  Capsula_CJ dato;
   
   Carpeta_jugador (Jugador jugador, int x, int y, int tx, int ty) {
     super (x, y, tx, ty);
-    this.dato = jugador;
+    this.dato = new Capsula_CJ (jugador);
   }
   
   
@@ -141,16 +139,15 @@ class Carpeta_jugador extends Boton {
     fill(0);
     textAlign(CENTER);
     textSize(20);
-    text(this.dato.nombre, op_x, op_y + this.ty/5, this.tx, this.ty);
+    text(this.dato.jugador.nombre, op_x, op_y + this.ty/5, this.tx, this.ty);
     fill(255);  
   }
   
   
-  //-------------------------|Presionar|-------------------------//
+  //-------------------------|Retornar|-------------------------//
   //Devuelve la información de la casilla que contiene
-  void presionar () {
-    if (this.sobre_boton())
-      println(this.dato.nombre);
+  Capsula_CJ retornar () {
+      return dato;
   }
 }
 
@@ -199,6 +196,7 @@ class Menu_seleccion {
     }
     
     Carpeta_casilla carpeta = new Carpeta_casilla (casilla, this.x, tm_v, 5*this.tx/6, this.ty/5);
+    carpeta.ingresar_imagen(img_carpeta);
     
     carpeta.y = tm_v;
     this.cant_carp = this.cant_carp + 1;
@@ -215,6 +213,7 @@ class Menu_seleccion {
     }
     
     Carpeta_jugador carpeta = new Carpeta_jugador (jugador, this.x, tm_v, 5*this.tx/6, this.ty/5);
+    carpeta.ingresar_imagen(img_carpeta);
     
     carpeta.y = tm_v;
     this.cant_carp = this.cant_carp + 1;
@@ -229,9 +228,14 @@ class Menu_seleccion {
     if ((this.tipo != 1) && (this.tipo != 2))  //Si el menú NO contiene datos aceptados
       return;
     
-    rect (this.x, this.y, this.tx, this.ty);
-    subir.mostrar();
-    bajar.mostrar();
+    if (archivador == null) {
+      rect (this.x, this.y, this.tx, this.ty);
+      subir.mostrar();
+      bajar.mostrar();
+    } else {
+      image (archivador, 0, 0);
+    }
+    
     this.desplazar();
     
     for (int i = 1; i <= this.cant_carp; i++) {
@@ -261,7 +265,8 @@ class Menu_seleccion {
       presionado = true;
       
       if (this.pos + this.ty + 3 >= this.tm_v) {   //Si se pasa del borde 
-        this.pos = this.tm_v - this.ty;
+        if ((this.tm_v > this.ty))                     //Si el tamaño de los archivos sobre pasa la ventana
+          this.pos = this.tm_v - this.ty;
       } else {                                     //Si NO se pasa del borde
         this.pos = this.pos + 3;
       }
@@ -280,10 +285,13 @@ class Menu_seleccion {
   
   //-------------------------|Presionar un Botón|-------------------------//
   //Evaluar qué botón fue presionado
-  void presionar () {
+  Capsula_CJ presionar () {
     for (int i = 1; i <= this.cant_carp; i++) {
-      this.lista[i].presionar();
+      if (this.lista[i].sobre_boton()) {
+         return this.lista[i].retornar();
+      }
     }
+    return null;
   }
   
   
@@ -309,7 +317,7 @@ class Menu_seleccion {
 |====================================================================|
 */
 class Tarjeta_itr extends Boton {
-  PImage reverso;     //Imagen del reverso de la tarjeta
+  PImage reverso;     //Imagen del reverso de la tarjeta  
   boolean lado;       //Determina el lado de la tarjeta [verdadero] frente | [falso] reverso
   boolean girando;    //Booleano para saber si la casilla está girando
   int rotacion;       //Rotación de la tarjeta
@@ -350,10 +358,10 @@ class Tarjeta_itr extends Boton {
     } else {             //Si la tarjeta está girando
       //Moverse en x
       if ((this.mov_x < this.mitad_carta) && (this.mover_x))  {  //Llegar hasta la mitad
-        this.mov_x = this.mov_x + 2;
+        this.mov_x = this.mov_x + 5;
       } else if (this.mover_x) {  //Si llegó a la mitad
         this.mitad_carta = 0;
-        this.mov_x = this.mov_x - 2;
+        this.mov_x = this.mov_x - 5;
         
         if (this.mov_x <= 0) {  //Si terminó el recorrido
           this.mov_x = 0;
@@ -365,7 +373,7 @@ class Tarjeta_itr extends Boton {
         
       //Girar carta    
       if ((this.giro_x > 0) && (girar)) {  //Reducir a 0 el tamaño
-        this.giro_x = this.giro_x - 4;
+        this.giro_x = this.giro_x - 10;
         voltear = true;
       } else {                             //Si se redujo a 0
         //Cambiar lado
@@ -380,7 +388,7 @@ class Tarjeta_itr extends Boton {
         this.girar = false;
           
         if (this.giro_x < this.tx)
-          this.giro_x = this.giro_x + 4;
+          this.giro_x = this.giro_x + 10;
       }
 
       //Visualizar tarjeta
@@ -414,4 +422,29 @@ class Tarjeta_itr extends Boton {
       this.girar = true;
     }
   }
+}
+
+
+/*
+|=====================================================================|
+*                      |Encapsulador de Clases|                         
+* Descripción:                                                        
+*  Clase creada para encapsular a objetos de las clases Jugador
+*  y Casilla para ser retornados por los botones
+|====================================================================|
+*/
+class Capsula_CJ {
+  Jugador jugador;
+  Casilla casilla;
+  
+  Capsula_CJ (Jugador jugador) {
+    this.jugador = jugador;
+    this.casilla = null;
+  }
+  
+  Capsula_CJ (Casilla casilla) {
+    this.jugador = null;
+    this.casilla = casilla;
+  }
+  
 }

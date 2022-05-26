@@ -68,8 +68,11 @@ class Lista_casillas {
     Lista_casillas posicion = this;
     
     if (dir){  //Mover hacia adelante
-      for (int i = 1; i <= cant; i++){
+      for (int i = 1; i <= cant; i++){          
         posicion = posicion.siguiente;
+        
+        if (posicion.casilla.tipo == 3)  //Si pasa por Inicio
+          pagar_salario = true;
       }
     } else {  //Mover hacia atrás
       Lista_casillas Cola = this;
@@ -78,6 +81,7 @@ class Lista_casillas {
         while (posicion.siguiente != Cola){
           posicion = posicion.siguiente;
         }
+        Cola = posicion;
       }
     }
     return posicion;
@@ -109,6 +113,8 @@ class Casilla {
     int efecto_esp;           //Especificación del efecto generado (Revisar documentación para más información)
     int cant_pago;            //Almacena la cantidad de rentas que se han pagado
     int[] historial_rentas = new int[50];   //Almacena la información de todas las rentas recogidas por esta propiedad
+    PImage frente;            //Imagen del frente de la tarjeta de la casilla
+    PImage reverso;           //Imagen del reverso de la tarjeta de la casilla
 
     Casilla (int contador, Jugador propietario, String nombre, int color_calle, int tipo, int valor, int renta0, int renta1, int renta2, int renta3, int renta4, int renta5, int hipoteca, int casa, int efecto, int efecto_esp){
       this.nombre = nombre;
@@ -134,6 +140,8 @@ class Casilla {
         this.propietario = null;
       } else {
         this.propietario = propietario;
+        this.frente = loadImage ("Tarjetas/" + nombre + "-frente.png");
+        this.reverso = loadImage ("Tarjetas/" + nombre + "-reverso.png");
       }
     }
     
@@ -352,24 +360,19 @@ class Lista_interfaz {
   void mostrar_interfaces () {
     Lista_interfaz temp = this;
     
-    if (temp.interfaz == null) {  //Si no hay ventanas en cola
-      menu = 5;
-      return;
-    }
-    
     do {
       if (!temp.interfaz.ventana.decision) {  //Si NO se ha tomado la decision
         temp.interfaz.mostrar();        //Mostrar ventana
         temp = temp.siguiente;          //Pasar a la siguiente ventana
       } else {                        //Si se tomó la decisión
         temp = temp.eliminar();         //Eliminar ventana
+        return;
       }
     } while (temp != this);
     
     this.previo.interfaz.mover();  //Si se mueve una ventana
-    //this.previo.interfaz.presionar();  //Si se presiona una ventana ------------------------ |Para hacer|
   }
-
+  
   
   //-------------------------|Seleccionar Ventana|-------------------------//
   //Seleccionar la ventana que primero se muestre
@@ -417,7 +420,13 @@ class Lista_interfaz {
   }
   
   
+  //-------------------------|Eliminar de la cola|-------------------------//
   Lista_interfaz eliminar () {
+    if (this.siguiente == this) {  //Si solo hay un elemento en la lista
+      this.interfaz = null;
+      return this;
+    }
+    
     Lista_interfaz temp = this.previo;
     
     temp.siguiente = this.siguiente;
@@ -561,47 +570,4 @@ class Lista_imagenes {
     temp = null;
     System.gc();
   }
-}
-
-/*
-|====================================================================|
-*                        |Lista de Cartas|
-* Descripción:                                                        
-*   Lista enlazada circular encargada de almacenar la información de las cartas
-|====================================================================|
-*/
-class Lista_carta{
- Carta carta;
- Lista_carta siguiente;
- 
- Lista_carta (Carta carta){
-  this.carta = carta;
-  this.siguiente = this;
- }
- 
- Lista_carta añadir_carta (Carta carta){
-   Lista_carta carta_actual = this;
-   Lista_carta nuevo = new Lista_carta(carta);
-   
-   while (carta_actual.siguiente != this){
-     carta_actual = carta_actual.siguiente;
-   }
-   
-   carta_actual.siguiente = nuevo;
-   nuevo.siguiente = this;
-   
-   return nuevo.siguiente;
-}
-class Carta{
- String texto;
- int accion;
- int efecto;
- int tipo_pago;
- 
- Carta (String texto, int tipo, int accion, int efecto){
-   this.texto = texto;
-   this.accion = accion; //[1]Recibir dinero [2]Pagar dinero [3]Moverse [4]Conservar carta
-   this.efecto = efecto; //valor del efecto
-   this.tipo_pago = tipo_pago; //[1]Pago directo [2]Pago por cantidad de propiedades
- }
 }

@@ -29,7 +29,7 @@ class Jugador {
   
   void generar_jugador (String nombre, int color_ficha, int figura_ficha, int tipo, Lista_casillas posicion) {
     this.nombre = nombre;
-    this.ficha = "figura_jugador_" + figura_ficha + "-" + color_ficha;
+    this.ficha = "Jugadores/figura_jugador_" + figura_ficha + "-" + color_ficha;
     this.tipo = tipo;
     this.saldo = 1500;
     this.propiedades = null;
@@ -53,7 +53,22 @@ class Jugador {
   ----------------------------|Subrutina para Movimiento|----------------------------
   Ejecuta la acción que sea necesaria al momento de caer en una determinada posición
   */
-void mover (Lista_casillas posicion) {
+  void mover (Lista_casillas posicion) {
+    if (encarcelado) {  //Si encarcelaron a este jugador
+      this.estado = 2;
+      this.posicion = posicion;
+      encarcelado = false;
+      println(this.nombre + " [Jugador]: Acaba de ser encarcelado - deberá lanzar un doble para salir de prisión");
+      return;
+    }
+    
+    if (pagar_salario) {  //Si este jugador pasó por Inicio
+      this.saldo += 200;
+      println(this.nombre + " [Jugador]: reclama $200 por concepto de salario");
+      println(this.nombre + " [Jugador]: nuevo saldo es " + this.saldo);
+      pagar_salario = false;
+    }
+    
     if (this.estado == 1){  //Si el jugador está libre
       this.posicion = posicion;
       Casilla casilla = posicion.casilla;
@@ -63,55 +78,118 @@ void mover (Lista_casillas posicion) {
           if (casilla.propietario == null) {  //Si no tiene dueño
             this.comprar(casilla, casilla.valor);
           } else {                             //Si tiene dueño
-            this.pagar(casilla.calcular_renta());
+            int renta = casilla.calcular_renta();
+            this.pagar(renta);
+            casilla.propietario.saldo += renta;
           }
           break;
         case 2:  //Servicio
           if (casilla.propietario == null) {  //Si no tiene dueño
             this.comprar(casilla, casilla.valor);
           } else {                             //Si tiene dueño
-            this.pagar(casilla.calcular_renta());
+            int renta = casilla.calcular_renta();
+            this.pagar(renta);
+            casilla.propietario.saldo += renta;
           }
           break;
         case 3:  //Inicio
           this.saldo = this.saldo + 200;
           break;
         case 4:  //Especial
-          switch (this.propiedades.casilla.efecto) {  //Dependiendo del efecto de la casilla
-            case 4:      //Si es una carta
-              if (this.propiedades.casilla.propiedad_esp == 1) {    //Si es carta de suerte
-                int accion = partida.lista_suerte.carta.accion;
-                int efecto = partida.lista_suerte.carta.efecto;
-                int tipo_pago = partida.lista_suerte.carta.tipo_pago;
-              } else {                                              //Si es carta de cofre
-                int accion = partida.lista_cofre.carta.accion;
-                int efecto = partida.lista_cofre.carta.efecto;
-                int tipo_pago = partida.lista_cofre.carta.tipo_pago;
+          switch (posicion.casilla.efecto) {
+            case 1:    //Ingreso
+              periodico = new V_Anuncio ("Noticias La República:\nCongreso aprueba paquete de auxilios a empresas\n\nSe ha contemplado un nuevo paquete de auxilios a empresas por valor de "+posicion.casilla.efecto_esp, 
+                                         loadImage("Periodico.png"), (710*width)/1920, (100*height)/1080, (500*width)/1920, (800*height)/1080);
+              
+              this.saldo += posicion.casilla.efecto_esp;
+              println(this.nombre + " [Jugador]: gana "+posicion.casilla.efecto_esp+" por concepto de auxilios");
+              println(this.nombre + " [Jugador]: nuevo saldo es " + this.saldo);
+              break;
+            case 2:    //Pago
+              periodico = new V_Anuncio ("Noticias La República:\nCongreso aprueba reforma tributaria\n\nSe ha contemplado un nuevo paquete de "+posicion.casilla.nombre+" por valor de "+posicion.casilla.efecto_esp, 
+                                         loadImage("Tablero/.png"), (710*width)/1920, (100*height)/1080, (500*width)/1920, (800*height)/1080);
+              
+              this.pagar(posicion.casilla.efecto_esp);
+              println(this.nombre + " [Jugador]: paga "+posicion.casilla.efecto_esp+" por concepto de impuestos");
+              println(this.nombre + " [Jugador]: nuevo saldo es " + this.saldo);
+              break;
+            case 3:    //Carcel
+              periodico = new V_Anuncio ("Noticias La República:\n"+this.nombre+" es judicializado y encarcelado\n\nEl reconocido empresario ha sido acusado de enriquecimiento ilícito por el juzgado 15 de la ciudad, fue capturado en un retén mientras intentaba huir a otro país", 
+                                         loadImage("Periodico.png"), (710*width)/1920, (100*height)/1080, (500*width)/1920, (800*height)/1080);
+              
+              //Buscar casilla de Cárcel
+              Lista_casillas temp = partida.mapa;
+              do {
+                temp = temp.siguiente;
+              } while (!(temp.casilla.tipo == 4 && temp.casilla.efecto == 5));
+              pos = temp;
+              
+              //Mandar para la carcel al jugador
+              cargar_an = false;
+              encarcelado = true;
+              break;
+            case 4:    //Carta
+              int efecto = 0;
+              int efecto_esp = 0;
+            
+              if (posicion.casilla.efecto_esp == 2) {          //Fortuna
+                periodico = new V_Anuncio ("", partida.fortuna.img, (710*width)/1920, (390*height)/1080, (500*width)/1920, (800*height)/1080);
+                efecto = partida.fortuna.efecto;
+                efecto_esp = partida.fortuna.efecto_esp;
+                
+                partida.fortuna = partida.fortuna.siguiente;
+              } else if (posicion.casilla.efecto_esp == 1) {  //Boletín
+                periodico = new V_Anuncio ("", partida.cofre.img, (710*width)/1920, (390*height)/1080, (500*width)/1920, (300*height)/1080);
+                efecto = partida.cofre.efecto;
+                efecto_esp = partida.cofre.efecto_esp;
+                
+                partida.cofre = partida.cofre.siguiente;
               }
               
-              switch(accion){
-                case 1:                                             //Sumar dinero al valor neto del jugador
-                  jugadores.jugador.saldo = jugadores.jugador.saldo + efecto;
-                  break;
-                case 2:                                             //Restar dinero al valor neto del jugador
-                  //[1][2]
-                  switch(tipo_pago){
-                    case 1:                                         //Pago directo 
-                      jugadores.jugador.pagar(efecto);
-                      break;
-                    case 2:                                         //Pago por tipo y cantidad de propiedad
-                      jugadores.jugador.pagar(efecto*());
-                      break;
-                  }
-                  break;
-                  case 3:                                            //Moverse de casilla
-                   // ----------------------------------------------------------- |Para hacer|
-                  case 4:                                            //Conservar carta
-                   // ----------------------------------------------------------- |Para hacer|
-              }
-              
+              switch (efecto) {
+                  case 1:    //Moverse
+                    if (efecto_esp == 0) {        //Ir al Inicio
+                      pos = partida.mapa;
+                    } else if (efecto_esp > 0) {  //Avanzar
+                      pos = jugadores.jugador.posicion.mover_posicion(partida.fortuna.efecto_esp, true);
+                    } else if (efecto_esp < 0) {  //Retroceder
+                      pos = jugadores.jugador.posicion.mover_posicion(-partida.fortuna.efecto_esp, false);
+                    }
+                    cargar_an = false;
+                    mov = true;
+                    break;
+                  case 2:    //Ganar Dinero
+                    jugadores.jugador.saldo += efecto_esp;
+                    break;
+                  case 3:    //Perder Dinero
+                    jugadores.jugador.pagar(efecto_esp);
+                    break;
+                  case 4:    //Cárcel
+                    if (efecto_esp == 1) {          //Liberar presos
+                      Lista_Jugadores temp1 = jugadores;
+                    
+                      for (int i = 1; i <= partida.cant_jug; i++) {
+                        if (temp1.jugador.estado == 2)
+                          temp1.jugador.estado = 1;
+                        temp1 = temp1.siguiente;
+                      }
+                    } else if (efecto_esp == 2) {   //Encarcelar jugador
+                      //Buscar casilla de Cárcel
+                      Lista_casillas temp2 = partida.mapa;
+                      do {
+                        temp2 = temp2.siguiente;
+                      } while (!(temp2.casilla.tipo == 4 && temp2.casilla.efecto == 5));
+                      pos = temp2;
+                      
+                      //Mandar para la carcel al jugador
+                      cargar_an = false;
+                      encarcelado = true;
+                    }
+                    break;
+                }
               break;
           }
+          //-------------------------------------------------------------------------------------------------|Para hacer|
           break;
       }
       
@@ -165,7 +243,7 @@ void mover (Lista_casillas posicion) {
   ----------------------------|Subrutinas para Vender|----------------------------
   Subrutina para redirigir una venta según el tipo de jugador
   ejecutar_venta(), subrutina para hacer efectiva la venta después de tomar una decisión
-  ingresar Jugador que va a comprar la propiedad, la propiedad en cuestión y su precio
+  ingresar Jugador que está ofreciendo la propiedad, la propiedad en cuestión y su precio
   */
   void prop_venta (Jugador jugador, Casilla propiedad, int precio){
     if (this.estado != 3){  //Si el jugador NO está en bancarrota
@@ -182,16 +260,15 @@ void mover (Lista_casillas posicion) {
   }
   
   void ejecutar_venta (Jugador jugador, Casilla propiedad, int precio) {
-    jugador.pagar(precio);                   //Pagar propiedad
-    this.saldo = this.saldo + precio;        //Recibir pago
+    this.pagar(precio);                       //Pagar propiedad
+    jugador.saldo = jugador.saldo + precio;   //Recibir pago
     
     //Traspaso de Escrituras
-    propiedad.propietario = jugador;
-    this.propiedades = this.propiedades.eliminar_propiedad(propiedad.nombre);
+    propiedad.propietario = this;
     
     //Actualización de inventarios
-    this.propiedades = this.propiedades.eliminar_propiedad(propiedad.nombre);
-    jugador.registrar_prop(propiedad); 
+    jugador.eliminar_prop(propiedad);
+    this.registrar_prop(propiedad); 
   }
   
   
@@ -216,6 +293,17 @@ void mover (Lista_casillas posicion) {
   }
   
   
+  //----------------------------|Subrutina para Registrar una propiedad|----------------------------
+  void eliminar_prop (Casilla propiedad) {
+    if (this.propiedades == null)                             //Si NO tiene propiedades
+      this.propiedades = null;
+    else if (this.propiedades.siguiente == this.propiedades)  //Si solo tiene una tiene propiedad
+      this.propiedades = null;
+    else                                                      //Si tiene varias propiedades
+      this.propiedades = this.propiedades.eliminar_propiedad(propiedad.nombre);
+  }
+  
+  
   //----------------------------|Subrutina para Vender|----------------------------
   void vender () {
     if (this.estado != 3) {  //Si el jugador NO está en bancarrota
@@ -231,10 +319,6 @@ void mover (Lista_casillas posicion) {
   //----------------------------|Subrutina para Pagar|----------------------------
   void pagar (int valor) {
     this.saldo = this.saldo - valor;  //Ejecutar pago
-    
-    if (this.saldo < 0) {    //Si se entra en deuda
-      this.estado = 3;           //Jugador entra en bancarrota
-    }
   }
   
   //----------------------------|Subrutina para Calcular Posición|----------------------------

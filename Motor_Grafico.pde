@@ -47,8 +47,8 @@ class Motor_Grafico {
     
     this.cam_px = 0;
     this.cam_py = 0;
-    this.cam_x = width;
-    this.cam_y = height;
+    this.cam_x = width * 2;
+    this.cam_y = height * 2;
   }
   
   

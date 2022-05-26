@@ -42,11 +42,13 @@ class Humano {
     mientras que la variable propiedad contiene la propiedad que se propone vender y la variable precio, al precio propuesto
   */
   void vender_propiedad (Jugador jugador, Casilla propiedad, int precio) {
-    menu = 8;  //Visualizar ventanas en cola
+    //menu = 8;  //Visualizar ventanas en cola
     
     //Crear interfaz y añadirla a la cola
     Cont_Ventana venta = new Cont_Ventana (jugador, propiedad, precio, 100, 100, 400, 600);
     this.cola_acciones.añadir_cola(venta, 0);
+
+    println("Comando [Jugador]: Registrada la propuesta de venta de " + propiedad.nombre + " por $" + precio);
   }
   
   
@@ -101,4 +103,25 @@ class Humano {
     Casilla propiedad = jugador.propiedades.casilla;
     return propiedad;
   }
+  
+  
+  //-------------------------|Contar la Cola|-------------------------//
+  int contar_ventanas () {
+    Lista_interfaz temp = this.cola_acciones;
+    
+    if (temp.interfaz == null) 
+      return 0;
+    else if (temp.interfaz.ventana.decision)
+      return 0;
+    
+    int num = 0;
+    
+    do {
+      num += 1;
+      temp = temp.siguiente;
+    } while (temp != this.cola_acciones);
+    
+    return num;
+  }
+  
 }

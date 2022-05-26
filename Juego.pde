@@ -15,10 +15,15 @@
 |====================================================================|
 */
 class Juego {
-  Lista_casillas mapa;    //Lista circular con todas las casillas del juego
+  Lista_casillas mapa;      //Lista circular con todas las casillas del juego
+  Carta fortuna;            //Lista circular con todas las cartas de Fortuna
+  Carta cofre;              //Lista circular con todas las cartas de Cofre
   
-  int cant_jug;    //Contar la cantidad de jugadores para cada partida (2-8 jugadores)
-  int[] of_pausa;  //Lista de la cola de espera para poder ofertar y vender (cada posición del vector es el número del jugador)
+  int cant_jug;             //Contar la cantidad de jugadores para cada partida (2-8 jugadores)
+  int cant_casas = 32;      //Cantidad de casas de las que dispone el juego
+  int cant_castillos = 12;  //Cantidad de castillos de los que dispone el juego
+  int[] of_pausa;           //Lista de la cola de espera para poder ofertar y vender (cada posición del vector es el número del jugador)
+  
   
   void lanzar_dados () {
     if (!dados_lanzados) {
@@ -28,12 +33,6 @@ class Juego {
     }
   }
   
-  void pasar_turno () {
-    jugadores = jugadores.siguiente;
-    dados_lanzados = false;
-    ind = 1;
-    interfaz.inv_cargado = false;
-  }
   
   /*
   -----------------------------------|Procedimiento de Generación de Jugadores|-----------------------------------
@@ -48,14 +47,14 @@ class Juego {
     
     println("Partida:  " + nuevo_jug.nombre + " ha sido generado - " + (jugador * (100 / cant_jug)) + "%");
   }
-  
+
   
   /*
   -------------------------------------|Procedimiento de Generación de Mapa|-------------------------------------
   Deberá existir un archivo alojado en la aplicación llamado "mapa.txt"
   En este archivo deberá contenerse toda la información de las casillas del mapa sin contar a la casilla de inicio
   */
-  void generar_mapa (){
+  void generar_mapa () {
     try {
       BufferedReader mapa = createReader("mapa.txt");
       
@@ -89,72 +88,104 @@ class Juego {
   }
   
   
+  void pasar_turno () {
+    jugadores = jugadores.siguiente;
+    
+    while (jugadores.jugador.estado == 3) {
+      jugadores = jugadores.siguiente;
+    }
+    
+    bancarrota = false;
+    dados_lanzados = false;
+    ind = 1;
+    interfaz.inv_cargado = false;
+    interfaz.neg_cargado = false;
+  }
+  
+  
+  //-------------------------|Verificar fin del Juego|-------------------------//
+  //Si todos los jugadores menos uno se encuentra en bancarrota
+  void verificar_fin () {
+    Lista_Jugadores temp = jugadores;
+    int cont = 0;
+    
+    do {
+      if (temp.jugador.estado != 3)  //Verificar cuántos jugadores quedan en la partida
+        cont += 1;
+      
+      if (cont > 1)                  //Si queda más de un jugador
+        return;
+      
+      temp = temp.siguiente;
+    } while (temp != jugadores);
+    
+    fin_juego = true;  //Si solo quedó un jugador
+  }
+  
+  
+  //-------------------------|Hipotecar propiedades|-------------------------//
+  //Por medio de esta subrutina se podrán hipotecar las propiedades
+  //Se venderán automáticamente todas las casas y castillos del grupo de color
+  //La propiedad quedará hipotecada y se pagará al jugador el valor de la hipoteca
+  void hipotecar (Casilla propiedad) {
+    
+  }
+  
+  
+  //-------------------------|Construir casas|-------------------------//
+  //Se podrá aumentar el nivel de las edificaciones de las propiedades
+  //Este será medido según la cantidad de casas y castillos disponibles
+  void construir (Casilla propiedad) {
+    if (propiedad.construcciones == 5)    //Si la propiedad ya llegó al límite de propiedades
+      return;
+    
+    jugadores.jugador.pagar (propiedad.vl_casa);  //Pagar el valor de la construcción
+    
+    if (propiedad.construcciones == 4 && this.cant_castillos > 0) {    //Si se desea comprar un castillo
+      this.cant_casas += 4;
+      this.cant_castillos -= 1;
+    } else if (this.cant_casas > 0) {                                  //Si se desea comprar una casa
+      this.cant_casas -= 1;
+    } else {                                                           //Si no hay lo que se desea comprar
+      return;
+    }
+    
+    propiedad.construcciones += 1;
+  }
+  
   /*
   -------------------------------------|Procedimiento de Cargado de cartas|-------------------------------------
-  Deberá existir un archivo alojado en la aplicación llamado "suerte.txt" y "cofre.txt"
-  En este archivo deberá contenerse toda la información de las cartas
-  dato[0] = texto 
-  dato[1] = acción
-  dato[2] = efecto
-  dato[3] = tipo de pago
+  Deberá existir un archivo alojado en la aplicación llamado "suerte.txt" y otro llamado "cofre.txt"
+  En este archivo deberá contenerse toda la información de las casillas del mapa sin contar a la casilla de inicio
   */
   void cargar_cartas () {
-     try {
-       BufferedReader carta = createReader("suerte.txt");
-
-       //Lectura de la información de cada carta tipo suerte
-       String linea = carta.readLine();
-       if (linea = null){
-        return; 
-       } else {
-         String[] dato = slipt(linea, "|");
-         Carta nueva_carta = new Carta (dato[0], dato[1], dato[2], dato[3]);
-         this.lista_suerte = new Lista_carta (nueva_carta);
-       }
-
-       Lista_carta temp = lista_suerte;
-
-       //Crear objeto Carta con la información
-       while(linea = carta.redLine()!= null){
-         String[] dato = slipt(linea, "|");
-         Carta nueva_carta = new Carta (dato[0], dato[1], dato[2], dato[3]);
-
-         lista_suerte = lista_suerte.añadir_carta(nueva_carta);
-         temp = temp.siguiente;
-       }
-
-       //Enlace para ser lista circular
-       temp.siguiente = lista_suerte;
-       suerte.close();
-
-
-       BufferedReader carta = createReader("cofre.txt");
-        
-       //Lectura de la información de cada carta tipo cofre
-       String linea = carta.readLine();
-       if (linea = null){   //Si la linea esta vacía, se detiene la lectura
-        return; 
-       } else {
-         String[] dato = slipt(linea, "|");
-         Carta nueva_carta = new Carta (dato[0], dato[1], dato[2], dato[3]);
-         this.lista_cofre = new Lista_carta (nueva_carta);
-       }
-
-       Lista_cofre temp = lista_cofre;
-
-       //Crear objeto Carta con la información
-       while(linea = carta.redLine()!= null){
-         String[] dato = slipt(linea, "|");
-         Carta nueva_carta = new Carta (dato[0], dato[1], dato[2], dato[3]);
-
-         lista_cofre = lista_cofre.añadir_carta(nueva_carta);
-         temp = temp.siguiente;
-       }
-
-       //Enlace para ser lista circular
-       temp.siguiente = lista_cofre;
-       cofre.close();
-
+    this.fortuna = new Carta ();
+    this.cofre = new Carta ();
+    
+    //Cargar cartas de Fortuna
+    try {
+      BufferedReader doc_fortuna = createReader("suerte.txt");
+      
+      String linea = null;
+      while ((linea = doc_fortuna.readLine()) != null) {
+        String[] datos = split(linea, "|");
+        this.fortuna.añadir_carta (loadImage("Cartas/Fortuna-"+datos[0]+".png"), int(datos[1]), int(datos[2]));
+      }
+      doc_fortuna.close();
+    } catch (IOException e) {
+      println("Partida:  Archivo no logró cargar");
+    }
+    
+    //Cargar cartas de Cofre
+    try {
+      BufferedReader doc_cofre = createReader("cofre.txt");
+      
+      String linea = null;
+      while ((linea = doc_cofre.readLine()) != null) {
+        String[] datos = split(linea, "|");
+        this.cofre.añadir_carta (loadImage("Cartas/Cofre-"+datos[0]+".png"), int(datos[1]), int(datos[2]));
+      }
+      doc_cofre.close();
     } catch (IOException e) {
       println("Partida:  Archivo no logró cargar");
     }
@@ -166,5 +197,14 @@ class Juego {
   Procedimiento para ubicar las cartas en un orden aleatorio
   */
   void barajar_cartas () {
+    int cont = 16;
+    int num = 0;
+    
+    for (int i = 1; i <= 16; i++) {
+      num = int(random (1, 16));
+      for (int j = 1; j <= num; j++) {
+        
+      }
+    }
   }
 }
